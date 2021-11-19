@@ -72,7 +72,7 @@ def train_and_eval_sklearn_classifier( clf, data ):
 ###
 
 # "clf", even though it's a regressor
-def train_and_eval_sklearn_regressor( clf, data ):
+def train_and_eval_sklearn_regressor(clf, data):
 	
 	x_train = data['x_train']
 	y_train = data['y_train']
@@ -80,13 +80,12 @@ def train_and_eval_sklearn_regressor( clf, data ):
 	x_test = data['x_test']
 	y_test = data['y_test']	
 	
-	clf.fit( x_train, y_train )	
-	p = clf.predict( x_train )
+	clf.fit(x_train, y_train)	
+	p = clf.predict(x_train)
 
 	mse = MSE( y_train, p )
 	rmse = sqrt( mse )
 	mae = MAE( y_train, p )
-
 
 	print ("\n# training | RMSE: {:.4f}, MAE: {:.4f}".format( rmse, mae ))
 
@@ -100,5 +99,5 @@ def train_and_eval_sklearn_regressor( clf, data ):
 
 	print ("# testing  | RMSE: {:.4f}, MAE: {:.4f}".format( rmse, mae )	)
 	
-	return { 'loss': rmse, 'rmse': rmse, 'mae': mae }
+	return {'loss': rmse, 'rmse': rmse, 'mae': mae }
 

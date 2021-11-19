@@ -21,7 +21,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler, Ma
 
 max_layers = 5
 
-"""--------------------------------------------------------------------------------------origional"""
+"""--------------------------------------------------------------------------------------original"""
 '''
 space = {
 	'scaler': hp.choice( 's', 
@@ -59,27 +59,26 @@ space = {
 }
 
 # for each hidden layer, we choose size, activation and extras individually
-for i in range( 1, max_layers + 1 ):
-	space[ 'layer_{}_size'.format( i )] = hp.quniform( 'ls{}'.format( i ), 2, 200, 1 )
-	space[ 'layer_{}_activation'.format( i )] = hp.choice( 'a{}'.format( i ), ('relu','relu','relu'))
-	space[ 'layer_{}_extras'.format( i )] = hp.choice( 'e{}'.format( i ), ( 
-		{ 'name': 'batchnorm' },
-		{ 'name': 'batchnorm' } ))		
+for i in range(1, max_layers + 1 ):
+	space['layer_{}_size'.format(i)] = hp.quniform('ls{}'.format(i), 2, 200, 1 )
+	space['layer_{}_activation'.format(i)] = hp.choice('a{}'.format(i), ('relu','relu','relu'))
+	space['layer_{}_extras'.format(i)] = hp.choice('e{}'.format(i), ( 
+		{'name': 'batchnorm' },
+		{'name': 'batchnorm' } ))		
 
 """--------------------------------------------------------------------------------------"""
 def get_params():
 
-	params = sample( space )
-	return handle_integers( params )
-
-
+	params = sample(space)
+	return handle_integers(params)
 
 #
 
 # print hidden layers config in readable way
 def print_layers( params ):
 	for i in range( 1, params['n_layers'] + 1 ):
-		print ("layer {} | size: {:>3} | activation: {:<7} | extras: {}".format( i,
+		print ("layer {} | size: {:>3} | activation: {:<7} | extras: {}".format(
+            i,
 			params['layer_{}_size'.format( i )], 
 			params['layer_{}_activation'.format( i )],
 			params['layer_{}_extras'.format( i )]['name'] ))
@@ -91,6 +90,7 @@ def print_params( params ):
 	pprint({ k: v for k, v in params.items() if not k.startswith( 'layer_' )})
 	print_layers( params )
 	print	
+
 
 def try_params( n_iterations, params ):
 	
@@ -105,6 +105,7 @@ def try_params( n_iterations, params ):
 # 		x_train_ = scaler.fit_transform( data['x_train'].astype( float ))
 # 		x_test_ = scaler.transform( data['x_test'].astype( float ))
 # 	else:
+    
 	x_train_ = data['x_train']
 	x_test_ = data['x_test']
 		
@@ -165,5 +166,5 @@ def try_params( n_iterations, params ):
 
 	print ("# testing  | log loss: {:.2%}, AUC: {:.2%}, accuracy: {:.2%}".format( ll, auc, acc ))
 
-	return { 'loss': ll, 'log_loss': ll, 'auc': auc, 'early_stop': model.stop_training }
+	return {'loss': ll, 'log_loss': ll, 'auc': auc, 'early_stop': model.stop_training }
 

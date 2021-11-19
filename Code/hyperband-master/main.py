@@ -8,7 +8,7 @@ import sys
 import pickle
 from pprint import pprint
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 from hyperband import Hyperband
 
@@ -22,8 +22,9 @@ from defs.keras_mlp import get_params, try_params
 #from defs.polylearn_pn import get_params, try_params
 #from defs.xgb import get_params, try_params
 #from defs.meta import get_params, try_params
+#from defs.lda import get_params, try_params
 
-
+'''
 #--------------------------------------------------random search
 try:
 	output_file_RS = sys.argv[1]
@@ -36,7 +37,6 @@ print("RS Will save results to", output_file_RS)
 
 hb2 = Hyperband( get_params, try_params )
 results_RS = hb2.run2( skip_last = 0)
-
 
 print("{} total, best:\n".format(len(results_RS)))
 
@@ -55,35 +55,39 @@ staRS_loss=[sub['best_loss'] for sub in results_RS]
 staRS_sec=[sub['seconds'] for sub in results_RS]
 
 '''
+
 #-------------------------------------------------- hyperband
 try:
 	output_file = sys.argv[1]
 	if not output_file.endswith( '.pkl' ):
 		output_file += '.pkl'	
 except IndexError:
-	output_file = 'results_2.pkl'
-	
+	output_file = 'results_HB.pkl'
+    
 print("HB Will save results to", output_file)
 
+hb = Hyperband(get_params, try_params)
+results = hb.run(skip_last = 0)
 
-hb = Hyperband( get_params, try_params )
-results = hb.run( skip_last = 0)
-
-print("{} total, best:\n".format( len( results )))
+print("{} total, best:\n".format(len(results)))
 
 for r in sorted( results, key = lambda x: x['loss'] )[:10]:
 	print( "loss: {:.2%} |auc: {:.2%} | {} seconds | {:.1f} iterations | run {} ".format( 
-		r['loss'],r['auc'], r['seconds'], r['iterations'], r['counter'] ))
-	pprint( r['params'] )
-	print
+		         r['loss'], r['auc'], r['seconds'], r['iterations'], r['counter']))
+	pprint(r['params'])
+	print()
 
-print ("saving...")
+print ("saving results...")
 
-with open( output_file, 'wb' ) as f:
-	pickle.dump( results, f )
+with open(output_file, 'wb') as f:
+	pickle.dump(results, f)
 
 sta_loss=[sub['best_loss'] for sub in results]
-sta_sec=[sub['seconds'] for sub in results]    
+sta_sec=[sub['seconds'] for sub in results]
 
-#--------------------------------------------------
-'''
+score = sta_loss
+runtime = sta_sec
+with open('score_vs_time.csv','w') as f_score:
+    f_score.write('Score,Time(s)\n')
+    for i in range(len(score)):
+        f_score.write('{},{}'.format(score[i], runtime[i]))
