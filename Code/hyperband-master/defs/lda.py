@@ -47,8 +47,25 @@ def try_params(n_doc, params):
     lda_score = lda.semantic_score(t_w)
     print('lda_score = {}'.format(lda_score))
 
-    return {'lda_score': lda_score}
+    return {'lda_score': lda_score,'topic_keywords': t_w}
 
+
+# def show_topics(lda, n_words=10):
+#     vectorizer, lda_model = best_LDA.get_model()
+    
+#     keywords = np.array(vectorizer.get_feature_names())
+    
+#     topic_keywords = []
+#     
+#     for topic_weights in lda_model.components_:
+#         top_keyword_locs = (-topic_weights).argsort()[:n_words]
+#         topic_keywords.append(keywords.take(top_keyword_locs))
+#     
+#     for i in range(0, len(topic_keywords)):
+#         print("Topic " + str(i))
+#         print(list(topic_keywords[i]))
+#     
+#     return topic_keywords
 
 class LDA_classifier(BaseEstimator, ClassifierMixin):
 
@@ -76,10 +93,22 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         data_vectorized = self.vectorizer.fit_transform(train_data)
         self.lda_model.fit(data_vectorized)
         
-        # return the topic_words
-        topic_words = []
+        # return the topic_keywords
         
-        return topic_words
+        keywords = np.array(self.vectorizer.get_feature_names())
+    
+        topic_keywords = []
+        n_words = 10
+        
+        for topic_weights in self.lda_model.components_:
+            top_keyword_locs = (-topic_weights).argsort()[:n_words]
+            topic_keywords.append(keywords.take(top_keyword_locs))
+        
+        for i in range(0, len(topic_keywords)):
+            print("Topic " + str(i))
+            print(list(topic_keywords[i]))
+        
+        return topic_keywords
 
     def predict(self, texts):
         text_vectorized = self.vectorizer.transform(texts)
@@ -92,7 +121,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         print('scoring:', score)
         return score
     
-    def semantic_score(self, topic_words):
+    def semantic_score(self, topic_keywords):
         
         score = 0
         #score = glove_score(topic_words)
