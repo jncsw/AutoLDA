@@ -6,7 +6,6 @@
 import numpy as np
 from gensim.models import LdaModel
 
-import numpy
 def embedding_distance(topic_words,model):
     score=0
     mean_list=[]
