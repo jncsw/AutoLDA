@@ -6,6 +6,13 @@
 import numpy as np
 from gensim.models import LdaModel
 
+import numpy
+def l2_norm(self, list1,list2):
+    a=numpy.array(list1)
+    b=numpy.array(list2)
+    res=numpy.linalg.norm(a-b)
+    return res
+
 def jaccard(self,list1,list2):
     intersection=len(list(set(list1).intersection(list2)))
     union=(len(list1)+len(list2))-intersection
