@@ -102,13 +102,13 @@ try:
 except IndexError:
 	output_file = 'results_HB_LDA.pkl'
     
-print("HB Will save results to", output_file)
+print("HB will save results to", output_file)
 
 hb = Hyperband_LDA(get_params, try_params, 556)
 # results = hb.run(dry_run=True)
 results = hb.run()
 
-print("{} total, best 10 are:\n".format(len(results)))
+print("\n---------------- {} total, best 10 are:\n".format(len(results)))
 
 for r in sorted(results, key = lambda x: x['lda_score'], reverse=True)[:10]:
 	print( "lda_score: {:.4} | {} seconds | {:.1f} n_doc | run {} ".format( 

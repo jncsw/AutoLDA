@@ -10,8 +10,8 @@ from random import random
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 # define search space
-space = {'max_df': hp.uniform('maxdf', 0.4, 1),
-         'min_df': hp.uniform('mindf', 0.1, 0.3),
+space = {'max_df': hp.uniform('maxdf', 0.7, 1),
+         'min_df': hp.uniform('mindf', 0.1, 0.2),
          'topic_number': 5+hp.randint('tn',15),
          # 'learning_method': hp.choice('lm', ('online', 'batch')),
          'learning_decay': hp.uniform('kappa', 0.51, 1.0),
@@ -32,6 +32,10 @@ def try_params(n_doc, params):
     
     print ("n_doc:", n_doc)
     print_params(params)
+    
+    # print('train_data =')
+    # print(train_data)
+    # print(len(train_data))
     
     # select n_doc as resources
     data = train_data[:n_doc] 

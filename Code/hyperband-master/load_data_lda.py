@@ -7,6 +7,8 @@ import gensim
 import numpy as np
 import csv
 
+# import nltk
+# nltk.download('stopwords')
 
 # Show top n keywords for each topic
 def show_topics(best_LDA, n_words=20):
@@ -46,7 +48,7 @@ subtitle_dic = {}
 
 nlp = spacy.load("en_core_web_sm", disable=['parser', 'ner'])
 
-for root, dirs, files in os.walk('Transcripts'):
+for root, dirs, files in os.walk('../Transcripts'):
 	for file in files:
 		if file.endswith('.txt') and (file.split('.')[0] in filenames):
 			with open(os.path.join(root, file)) as f:

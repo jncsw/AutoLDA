@@ -195,6 +195,7 @@ class Hyperband_LDA:
                 
                 n_configs = int(n * self.eta ** ( -i ))
                 n_doc = int(r * self.eta ** ( i ))
+                # n_doc = max(int(r * self.eta ** ( i )), 200)
                 
                 print("\n*** {} configurations x {:.1f} documents each".format( 
                     n_configs, n_doc))
@@ -207,8 +208,7 @@ class Hyperband_LDA:
                     print ("\n{} | {} | best score so far: {:.4f} (run {})".format( 
                         self.counter, ctime(), self.best_score, self.best_counter))
                     
-                    print ("s={} | ni={} | ri={}".format( 
-                        s, n_configs, n_doc))
+                    print ("s={} | ni={} | ri={}".format(s, n_configs, n_doc))
                     
                     # start_time = time()
                     
@@ -231,7 +231,7 @@ class Hyperband_LDA:
                     
                     # keeping track of the best result so far (for display only)
                     # could do it be checking results each time, but hey
-                    if score < self.best_score:
+                    if score > self.best_score:
                         self.best_score = score
                         self.best_counter = self.counter
                     
