@@ -6,7 +6,6 @@
 import numpy as np
 from gensim.models import LdaModel
 
-import numpy
 def l2_norm(self, list1,list2):
     a=np.array(list1)
     b=np.array(list2)
