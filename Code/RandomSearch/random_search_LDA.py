@@ -17,11 +17,13 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from scipy.stats import uniform
 from scipy.stats import randint as sp_randint
 from sklearn.model_selection import RandomizedSearchCV
+import time
+import matplotlib.pyplot as plt
 
 np.set_printoptions(threshold= sys.maxsize)
 np.random.seed(5)
 
-load_model = True
+load_model = False
 model_name = 'best_LDA.pkl'
 save_to_model = False
 save_model_name = 'best_LDA.pkl'
@@ -92,6 +94,8 @@ for video_id in filenames:
 	except:
 		pass;
 
+score_all = []; time_all = []
+
 class LDA_classifier(BaseEstimator, ClassifierMixin):
 
 	def __init__(self, max_df, min_df, topic_number):
@@ -116,6 +120,10 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 		tmp = self.vectorizer.transform(train_data)
 		score = self.lda_model.perplexity(tmp)
 		print('scoring:', score)
+		# global score_all, time_all
+		time_all.append(time.time() - time_all[0])
+		score_all.append(max([score]+score_all))
+		# print(time_all, score_all)
 		return score
 
 	def get_model(self):
@@ -126,15 +134,22 @@ if (not load_model):
 	cv = [(slice(None), slice(None))]
 	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5)
 	random_search = RandomizedSearchCV(lda, param_distributions=param_dist,
-									   n_iter=1, cv=cv, random_state=100, n_jobs=-1)
+									   n_iter=2, cv=cv, random_state=100, n_jobs=1)
+
+	time_all.append(time.time())
 	random_search.fit(train_data)
-	best_LDA = random_search.best_estimator_
 	print(random_search.best_params_)
 
-	best_LDA.get_model()
-	best_LDA.score(train_data)
+	time_all = time_all[1:]
+	plt.plot(time_all, score_all)
+	plt.xlabel('time')
+	plt.ylabel('score')
+	plt.show()
+	# best_LDA.get_model()
+	# best_LDA.score(train_data)
 
 	if save_to_model:
+		best_LDA = random_search.best_estimator_
 		with open('best_LDA.pkl', 'wb') as f:
 			pickle.dump(best_LDA, f)
 
@@ -143,6 +158,9 @@ else:
 		best_LDA = pickle.load(f)
 	best_LDA.score(train_data)
 
-show_topics(best_LDA)
+# show_topics(best_LDA)
+
+
+
 
 
