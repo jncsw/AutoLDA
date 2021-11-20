@@ -8,9 +8,9 @@ from gensim.models import LdaModel
 
 import numpy
 def l2_norm(self, list1,list2):
-    a=numpy.array(list1)
-    b=numpy.array(list2)
-    res=numpy.linalg.norm(a-b)
+    a=np.array(list1)
+    b=np.array(list2)
+    res=np.linalg.norm(a-b)
     return res
 
 def jaccard(self,list1,list2):
