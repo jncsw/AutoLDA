@@ -15,15 +15,14 @@ try:
 except ImportError:
 	print( "In order to achieve operational capability, this programme requires hyperopt to be installed (pip install hyperopt), unless you make get_params() use something else.")
 	
-#	
 
 # handle floats which should be integers
 # works with flat params
-def handle_integers( params ):
+def handle_integers(params):
 
 	new_params = {}
 	for k, v in params.items():
-		if type( v ) == float and int( v ) == v:
+		if type(v) == float and int( v ) == v:
 			new_params[k] = int( v )
 		else:
 			new_params[k] = v
@@ -32,7 +31,7 @@ def handle_integers( params ):
 	
 ###
 
-def train_and_eval_sklearn_classifier( clf, data ):
+def train_and_eval_sklearn_classifier(clf, data):
 	
 	x_train = data['x_train']
 	y_train = data['y_train']
@@ -99,5 +98,5 @@ def train_and_eval_sklearn_regressor(clf, data):
 
 	print ("# testing  | RMSE: {:.4f}, MAE: {:.4f}".format( rmse, mae )	)
 	
-	return {'loss': rmse, 'rmse': rmse, 'mae': mae }
+	return {'loss': rmse, 'rmse': rmse, 'mae': mae}
 
