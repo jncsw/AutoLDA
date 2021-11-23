@@ -8,7 +8,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.base import BaseEstimator, ClassifierMixin
 from random import random
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from LDA_metric import embedding_distance
+# from LDA_metric import embedding_distance
 
 # define search space
 space = {'max_df': hp.uniform('maxdf', 0.7, 1),
@@ -125,8 +125,8 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
     def semantic_score(self, topic_keywords):
         
         score = 0
-        score = embedding_distance(topic_words, model)
-        # score = random()
+        # score = embedding_distance(topic_words, model)
+        score = random()
         
         return score
 
