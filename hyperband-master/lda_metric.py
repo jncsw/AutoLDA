@@ -35,9 +35,6 @@ def score = cal_distance(embeddings, method):
     return score
 
 
-
-
-
 def jaccard(self,list1,list2):
     intersection=len(list(set(list1).intersection(list2)))
     union=(len(list1)+len(list2))-intersection
