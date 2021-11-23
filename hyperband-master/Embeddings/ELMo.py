@@ -26,8 +26,7 @@ elmo = hub.Module("https://tfhub.dev/google/elmo/2", trainable=True)
 #     signature="default",
 #     as_dict=True)["elmo"]
 
-init = tf.initialize_all_variables()
-sess = tf.Session()
+
 
 
 # # Print word embeddings for word WATCH in given two sentences
@@ -37,19 +36,30 @@ sess = tf.Session()
 # print(sess.run(embeddings[1][5]))
 
 
+# def genEmbeddings_ELMo(text): # single word
+#     sess.run(init)
+#     embeddings = elmo(
+#     [
+#         text,
+#     ],
+#     signature="default",
+#     as_dict=True)["elmo"]
+#     return sess.run(embeddings[0][0])
+
+
 def genEmbeddings_ELMo(text):
+    processedText = []
+    for t in text:
+        processedText.append(" ".join(t))
+
+    init = tf.initialize_all_variables()
+    sess = tf.Session()
     sess.run(init)
     embeddings = elmo(
-    [
-        text,
-    ],
+    processedText,
     signature="default",
     as_dict=True)["elmo"]
-
-
-
-
-    return sess.run(embeddings[0][0])
+    return sess.run(embeddings)
 
 if __name__ == "__main__":
     print("Embedding=",genEmbeddings_ELMo("watch"))
