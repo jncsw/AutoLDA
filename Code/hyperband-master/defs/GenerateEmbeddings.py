@@ -1,4 +1,4 @@
-from Embeddings.BERT import genEmbeddings_BERT
+from defs.Embeddings.BERT import genEmbeddings_BERT
 from tqdm import tqdm
 import numpy as np
 # Topic 0
@@ -37,7 +37,8 @@ InputData = [
 
 def GenEmb_BERT(InputData):
     AllEmb = []
-    for topic in tqdm(InputData):
+    # for topic in tqdm(InputData):
+    for topic in (InputData):
         topicEmb = []
         for keyword in topic:
             emb = genEmbeddings_BERT(keyword)

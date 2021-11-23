@@ -9,6 +9,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from random import random
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 # from LDA_metric import embedding_distance
+from defs.GenerateEmbeddings import GenEmb_BERT, Calc_Dist
 
 # define search space
 space = {'max_df': hp.uniform('maxdf', 0.7, 1),
@@ -126,7 +127,12 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         
         score = 0
         # score = embedding_distance(topic_words, model)
-        score = random()
+        AllEmb = GenEmb_BERT(topic_keywords)
+        # print("Calculating distance...")
+        # print("Score = ", Calc_Dist(AllEmb))
+        score = Calc_Dist(AllEmb)
+
+        # score = random()
         
         return score
 

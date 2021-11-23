@@ -15,7 +15,10 @@ nltk.download('punkt')
 # https://towardsdatascience.com/3-types-of-contextualized-word-embeddings-from-bert-using-transfer-learning-81fcefe3fe6d
 
 
-from transformers import BertTokenizer, BertModel
+from transformers.modeling_bert import BertModel, BertForMaskedLM
+
+from transformers import BertTokenizer
+# , BertModel
 import pandas as pd
 import numpy as np
 import nltk
@@ -119,8 +122,8 @@ def genEmbeddings_BERT(text):
     # Find the position 'bank' in list of tokens
     
     if text not in tokenized_text:
-        print("BERT Embedding generation failed for ",text)
-        print("tokenized_text=",tokenized_text)
+        # print("BERT Embedding generation failed for ",text)
+        # print("tokenized_text=",tokenized_text)
         return list_token_embeddings[1]
         # return []
     word_index = tokenized_text.index(text)
