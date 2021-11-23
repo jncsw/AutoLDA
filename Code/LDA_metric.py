@@ -6,6 +6,22 @@
 import numpy as np
 from gensim.models import LdaModel
 
+def embedding_distance(topic_words,model):
+    score=0
+    mean_list=[]
+    for list in topic_words:
+        mean=np.mean(list)
+        mean_list.append(mean)
+    center=np.mean(mean_list)
+    dif=0
+    coh=0
+    for m in mean_list:
+        dif+=np.square(m-center)
+        coh+=np.sum(m)
+    dif=np.sqrt(dif)
+    score=format(dif/coh,'.2f')
+    return score
+
 def jaccard(self,list1,list2):
     intersection=len(list(set(list1).intersection(list2)))
     union=(len(list1)+len(list2))-intersection
