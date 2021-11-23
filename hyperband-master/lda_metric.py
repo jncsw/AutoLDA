@@ -8,6 +8,7 @@ import numpy as np
 # from gensim.models import LdaModel
 from GenerateEmbeddings import GenEmb_BERT, Calc_Dist
 
+
 def embedding_distance(topic_words, model):
 
     if model == "BERT":
@@ -28,7 +29,7 @@ def embedding_distance(topic_words, model):
     return score
 
 
-def score = cal_distance(embeddings, method):
+def cal_distance(embeddings, method):
 
     score = 0
 
