@@ -6,7 +6,7 @@
 
 import numpy as np
 # from gensim.models import LdaModel
-from GenerateEmbeddings import GenEmb, Calc_Dist
+# from GenerateEmbeddings import GenEmb, Calc_Dist
 
 
 def embedding_distance(topic_words, model):
@@ -20,7 +20,6 @@ def embedding_distance(topic_words, model):
         #score = Calc_Dist(AllEmb)
 
 
-
     # distance
     score = cal_distance(embeddings, 'coh-dif')
 
@@ -28,11 +27,54 @@ def embedding_distance(topic_words, model):
 
 
 def cal_distance(embeddings, method):
+    """
+    embeddings is a list of list of list
+                    topic   words   embs
+    """
+    emb = np.array(embeddings)
+    print(emb.shape) # 10, 10, x
+
+    num_topic = emb.shape[0]
+    num_words = emb.shape[1]
+    num_dim = emb.shape[2]
 
     score = 0
 
     if method == "coh-dif":
 
+        # cal the coherence within the same topic
+        topic_centers = np.mean(emb, axis=1) # average along the words
+
+        print(topic_centers)
+        print(topic_centers.shape) 
+
+        coh_sum = 0
+        for t in range(num_topic): # loop through each topic
+
+            coh = 0
+            coh_ct = 0
+            for w in range(num_words): # loop through each words in a topic
+                word = emb[t,w,:]
+                topic_center = topic_centers[t,:]
+                coh += np.linalg.norm(word-topic_center)
+                coh_ct += 1
+            coh = coh / coh_ct
+            coh_sum += coh
+        print('coh_sum =',coh_sum)
+
+        # cal the dif between each topic center and the global center
+        global_center = np.mean(topic_centers, axis=0) # average along the topics
+        print("global_center =", global_center)
+
+        dif_sum = 0
+        for t in range(num_topic): # loop through each topic
+            dif = np.linalg.norm(topic_centers[t,:]-global_center)
+            dif_sum += dif
+
+        print('dif_sum =', dif_sum)
+
+        # cal the score dif_sum/coh_sum
+        score = dif_sum / coh_sum
 
     return score
 
@@ -85,3 +127,13 @@ def log_perplexity(self, chunk, total_docs=None):
 #calulate the perplexity of LDA model
 # lda=LdaModel(common_corpus,num_topics=num_topic,id2word=idc,alpha='auto',chunksize=len(texts_all),iterations=20000)
 # perplexity=lda.log_perplexity(common_corpus)
+
+
+if __name__ == "__main__":
+    test = [[[0, 1, 2], [3, 4, 5]], 
+            [[0, 1, 2], [3, 4, 5]],  
+            [[0, 1, 2], [3, 4, 5]], 
+            [[0, 1, 2], [3, 4, 5]]]
+    score = cal_distance(test, 'coh-dif')
+    print('score =', score)
+
