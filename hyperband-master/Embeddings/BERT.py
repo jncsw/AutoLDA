@@ -6,8 +6,8 @@ import os
 
 
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+#nltk.download('stopwords')
+#nltk.download('punkt')
 
 
 
