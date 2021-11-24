@@ -26,7 +26,7 @@ class Hyperband:
     # can be called multiple times
     def run(self, skip_last=0, dry_run=False):
         
-        print('Running Hyperband.............\n')
+        print('Running Hyperband ......')
         start_time = time()
         
         for s in reversed( range( self.s_max + 1 )):

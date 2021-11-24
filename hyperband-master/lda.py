@@ -3,12 +3,13 @@
 
 from common_defs import *
 from hyperopt.pyll.stochastic import sample
-from load_data_lda import train_data
+# from load_data_lda import train_data
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.base import BaseEstimator, ClassifierMixin
 from random import random
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from lda_metric import embedding_distance
+import pickle
 
 # define search space
 space = {'max_df': hp.uniform('maxdf', 0.7, 1),
@@ -20,6 +21,10 @@ space = {'max_df': hp.uniform('maxdf', 0.7, 1),
          'batch_size': hp.choice( 'bs', ( 16, 32, 64, 128, 256 )),
          'max_iter': hp.choice('max_iter',(5, 10, 20))
     }
+
+with open('train_data.pkl','rb') as pk:
+    train_data = pickle.load(pk)
+
 
 def get_params():
     params = sample(space)

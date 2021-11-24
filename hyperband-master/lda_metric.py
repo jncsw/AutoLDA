@@ -1,12 +1,6 @@
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @time : 11/17/2021 10:20 AM
-# @Author: DONGQING YANG
-# @File : .py
-
 import numpy as np
 # from gensim.models import LdaModel
-# from GenerateEmbeddings import GenEmb, Calc_Dist
+from GenerateEmbeddings import GenEmb, Calc_Dist
 
 
 def embedding_distance(topic_words, model):

@@ -3,6 +3,8 @@ from Embeddings.ELMo import genEmbeddings_ELMo
 from Embeddings.Word2Vec import genEmbeddings_W2V
 # from tqdm import tqdm
 import numpy as np
+
+
 # Topic 0
 # ['baby', 'car', 'vlog', 'camera', 'house', 'family', 'ready', 'girl', 'tell', 'channel']
 # Topic 1
