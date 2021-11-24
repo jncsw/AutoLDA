@@ -1,4 +1,6 @@
 from Embeddings.BERT import genEmbeddings_BERT
+from Embeddings.ELMo import genEmbeddings_ELMo
+from Embeddings.Word2Vec import genEmbeddings_W2V
 # from tqdm import tqdm
 import numpy as np
 # Topic 0
@@ -35,13 +37,31 @@ InputData = [
 ['walk', 'happen', 'line', 'hair', 'show', 'pretty', 'use', 'talk', 'keep', 'stuff'] ]
 
 
-def GenEmb_BERT(InputData):
+def genEmbeddings_GLOVE(arg):
+    return []
+
+
+def GenEmb(InputData, model):
+
+    print("++++++++++ Model = ", model)
+
+    if model == "ELMo":
+        return genEmbeddings_ELMo(InputData)
+
     AllEmb = []
+    
     # for topic in tqdm(InputData):
     for topic in (InputData):
         topicEmb = []
         for keyword in topic:
-            emb = genEmbeddings_BERT(keyword)
+            if model == "BERT":
+                emb = genEmbeddings_BERT(keyword)
+            elif model == "GLOVE":
+                emb = genEmbeddings_GLOVE(keyword)
+            elif model == "W2V":
+                emb = genEmbeddings_W2V(keyword)
+            elif model == "ELMo":
+                emb = genEmbeddings_ELMo(keyword)
             topicEmb.append(emb)
         AllEmb.append(topicEmb)
     return AllEmb

@@ -6,20 +6,19 @@
 
 import numpy as np
 # from gensim.models import LdaModel
-from GenerateEmbeddings import GenEmb_BERT, Calc_Dist
+from GenerateEmbeddings import GenEmb, Calc_Dist
+
 
 def embedding_distance(topic_words, model):
 
-    if model == "BERT":
-
-        embeddings = GenEmb_BERT(topic_words)
+    allModel = ["BERT", "GLOVE", "W2V", "ELMo"]
+    for model in allModel:
+        embeddings = GenEmb(topic_words, model)
+        print("------ Embedding for ", model, "------", len(embeddings))
         # print("Calculating distance...")
         # print("Score = ", Calc_Dist(AllEmb))
         #score = Calc_Dist(AllEmb)
 
-    elif model =="GLOVE":
-        
-        pass
 
 
     # distance
