@@ -28,9 +28,12 @@ def embedding_distance(topic_words, model):
     return score
 
 
-def score = cal_distance(embeddings, method):
+def cal_distance(embeddings, method):
 
     score = 0
+
+    if method == "coh-dif":
+
 
     return score
 
