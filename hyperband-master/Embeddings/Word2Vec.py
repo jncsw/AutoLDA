@@ -1,23 +1,12 @@
 
 from gensim.test.utils import common_texts
 from gensim.models import Word2Vec
-
 import os
-
 import numpy as np
-
-
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
 
-
-
-allfiles = []
-for root, dirs, files in os.walk("/home/ubuntu/AutoLDA/Transcripts/", topdown=False):
-    for name in files:
-        if name.endswith(".txt") and "checkpoint" not in name:
-            allfiles.append(os.path.join(root, name))
+# nltk.download('stopwords')
+# nltk.download('punkt')
 
 
 def getAllText(allfiles):
@@ -26,32 +15,27 @@ def getAllText(allfiles):
         with open(file,"r") as f:
             listOfWord = f.read().split()
             res.append([word.lower() for word in listOfWord if word.isalpha()])
-    return res
-            
-allText = getAllText(allfiles)
-
-
-# print(len(allText))
+    return res            
 
 def trainWord2Vec(allText):
     model = Word2Vec(sentences=allText, vector_size=100, window=5, min_count=1, workers=8)
-    model.save("./Word2Vec/word2vec.model")
+    model.save("./Word2Vec_save/word2vec.model")
     print("Model saved.")
     # Store just the words + their trained embeddings.
     word_vectors = model.wv
-    word_vectors.save("./Word2Vec/word2vec.wordvectors")
+    word_vectors.save("./Word2Vec_save/word2vec.wordvectors")
     print("Word vectors saved.")
-    with open("./Word2Vec/word2vec.vocab", "w") as f:
+    with open("./Word2Vec_save/word2vec.vocab", "w") as f:
         for word in word_vectors.key_to_index.keys():
             f.write(word + "\n")
     print("Vocab saved.")
     return model
 
 def loadWord2Vec():
-    model = Word2Vec.load("/home/ubuntu/AutoLDA/hyperband-master/Embeddings/Word2Vec/word2vec.model")
+    cwd = os.getcwd()
+    model = Word2Vec.load(cwd +"/Embeddings/Word2Vec_save/word2vec.model")
     word_vectors = model.wv
     return word_vectors
-
 
 def getWord2Vec(word_vectors, word):
     try:
@@ -69,8 +53,20 @@ def getWord2Vec(word_vectors, word):
 
 word_vectors = loadWord2Vec()
 
-
 def genEmbeddings_W2V(keyword):
     
     emb = getWord2Vec(word_vectors, keyword)
     return emb
+
+if __name__ == '__main__':
+    allfiles = []
+    cwd = os.getcwd()
+    for root, dirs, files in os.walk(cwd + "/../Transcripts/", topdown=False):
+        for name in files:
+            if name.endswith(".txt") and "checkpoint" not in name:
+                allfiles.append(os.path.join(root, name))
+
+    allText = getAllText(allfiles)
+    # print(len(allText))
+
+

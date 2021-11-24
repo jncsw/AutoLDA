@@ -45,7 +45,7 @@ def genEmbeddings_GLOVE(arg):
 
 def GenEmb(InputData, model):
 
-    print("++++++++++ Model = ", model)
+    # print("++++++++++ Model = ", model)
 
     if model == "ELMo":
         return genEmbeddings_ELMo(InputData)
@@ -61,11 +61,13 @@ def GenEmb(InputData, model):
             elif model == "GLOVE":
                 emb = genEmbeddings_GLOVE(keyword)
             elif model == "W2V":
+                # pass
                 emb = genEmbeddings_W2V(keyword)
             elif model == "ELMo":
                 emb = genEmbeddings_ELMo(keyword)
             topicEmb.append(emb)
         AllEmb.append(topicEmb)
+        
     return AllEmb
 
 def dist(a,b):

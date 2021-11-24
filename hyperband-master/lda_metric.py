@@ -5,15 +5,16 @@ from GenerateEmbeddings import GenEmb, Calc_Dist
 
 def embedding_distance(topic_words, model):
 
-    allModel = ["BERT", "GLOVE", "W2V", "ELMo"]
-    for model in allModel:
-        embeddings = GenEmb(topic_words, model)
-        print("------ Embedding for ", model, "------", len(embeddings))
-        # print("Calculating distance...")
-        # print("Score = ", Calc_Dist(AllEmb))
-        #score = Calc_Dist(AllEmb)
+    # allModel = ["BERT", "GLOVE", "W2V", "ELMo"]
+    # for model in allModel:
+    #     embeddings = GenEmb(topic_words, model)
+    #     print("------ Embedding for ", model, "------", len(embeddings))
+    #     # print("Calculating distance...")
+    #     # print("Score = ", Calc_Dist(AllEmb))
+    #     #score = Calc_Dist(AllEmb)
 
-
+    embeddings = GenEmb(topic_words, model)
+    
     # distance
     score = cal_distance(embeddings, 'coh-dif')
 
@@ -26,7 +27,7 @@ def cal_distance(embeddings, method):
                     topic   words   embs
     """
     emb = np.array(embeddings)
-    print(emb.shape) # 10, 10, x
+    # print(emb.shape) # 10, 10, x
 
     num_topic = emb.shape[0]
     num_words = emb.shape[1]
@@ -39,8 +40,8 @@ def cal_distance(embeddings, method):
         # cal the coherence within the same topic
         topic_centers = np.mean(emb, axis=1) # average along the words
 
-        print(topic_centers)
-        print(topic_centers.shape) 
+        # print(topic_centers)
+        # print(topic_centers.shape) 
 
         coh_sum = 0
         for t in range(num_topic): # loop through each topic
@@ -54,11 +55,12 @@ def cal_distance(embeddings, method):
                 coh_ct += 1
             coh = coh / coh_ct
             coh_sum += coh
+
         print('coh_sum =',coh_sum)
 
         # cal the dif between each topic center and the global center
         global_center = np.mean(topic_centers, axis=0) # average along the topics
-        print("global_center =", global_center)
+        # print("global_center =", global_center)
 
         dif_sum = 0
         for t in range(num_topic): # loop through each topic
