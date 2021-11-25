@@ -9,4 +9,5 @@ $ unzip glove.840B.300d.zip
 $ python GLOVE.py 
 
 2. To run hyperband with LDA:
-$ python main.py GLOVE results_HB_glove.pkl
+$ python main.py GLOVE results_hb_glove.pkl
+$ python main.py BERT results_hb_bert.pkl
