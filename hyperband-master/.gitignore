@@ -1,5 +1,5 @@
 *.py[cod]
-*.pkl
+#*.pkl
 *.kate-swp
 main_autoimport.py
 defs/fm.py

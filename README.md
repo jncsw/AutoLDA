@@ -11,3 +11,7 @@ $ python GLOVE.py
 2. To run hyperband with LDA:
 $ python main.py GLOVE results_hb_glove.pkl
 $ python main.py BERT results_hb_bert.pkl
+
+
+3. To show the best 10 configurations with its previously calculated topic_words:
+$ python python show_results.py results_hb_glove.pkl 10
