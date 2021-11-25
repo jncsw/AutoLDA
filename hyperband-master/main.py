@@ -112,6 +112,8 @@ hb = Hyperband_LDA(get_params, try_params, 556, emb_model)
 # results = hb.run(dry_run=True)
 results = hb.run()
 
+
+# show the best 10 configs
 print("\n---------------- {} total, best 10 are:\n".format(len(results)))
 
 for r in sorted(results, key = lambda x: x['lda_score'], reverse=True)[:10]:

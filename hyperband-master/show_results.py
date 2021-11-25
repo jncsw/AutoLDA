@@ -16,13 +16,15 @@ except IndexError:
 try:
 	results_to_show = int( sys.argv[2] )
 except IndexError:
-	results_to_show = 5
+	results_to_show = 10
 
 with open( input_file, 'rb' ) as i_f:
 	results = pickle.load( i_f )
 
-for r in sorted( results, key = lambda x: x['loss'] )[:results_to_show]:
-	print ("loss: {:.2%} | {} seconds | {:.1f} iterations | run {} ".format( 
-		r['loss'], r['seconds'], r['iterations'], r['counter'] ))
-	pprint( r['params'] )
-	print
+
+for r in sorted(results, key = lambda x: x['lda_score'], reverse=True)[:results_to_show]:
+    print( "lda_score: {:.4} | {} seconds | {:.1f} n_doc | run {} ".format( 
+                 r['lda_score'], r['seconds'], r['n_doc'], r['counter']))
+    pprint(r['params'])
+    pprint(r['topic_keywords'])
+    print()
