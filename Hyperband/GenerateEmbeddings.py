@@ -60,7 +60,7 @@ def GenEmb(InputData, model):
                 emb = genEmbeddings_GLOVE(keyword)
             elif model == "W2V":                
                 emb = genEmbeddings_W2V(keyword)
-            elif model == "ELMo":
+            elif model == "ELMO":
                 emb = genEmbeddings_ELMo(keyword)
             topicEmb.append(emb)
         AllEmb.append(topicEmb)

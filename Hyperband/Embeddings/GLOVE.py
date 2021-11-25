@@ -4,8 +4,9 @@ import pickle
 # import tqdm
 
 def load_GLOVE():
+    model = 'glove_pretrained_840b_300d.pkl'
     print("loading GLOVE pretrained model ......")
-    with open('./Embeddings/GLOVE_pretrained/glove_pretrained_840b_300d.pkl','rb') as pk:
+    with open('./Embeddings/GLOVE_pretrained/'+model,'rb') as pk:
         glove_emb = pickle.load(pk)
     print('GLOVE loaded.\n')
 
@@ -16,6 +17,8 @@ def genEmbeddings_GLOVE(keyword):
     word_embedding = [0 for i in range(300)]
     if keyword in glove_emb:
         word_embedding = glove_emb[keyword]
+    else:
+        print('--'*10, keyword, 'not found in GLOVE!')
 
     return word_embedding
 

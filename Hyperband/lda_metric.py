@@ -27,7 +27,8 @@ def cal_distance(embeddings, method):
                     topic   words   embs
     """
     emb = np.array(embeddings)
-    # print(emb.shape) # 10, 10, x
+    print(emb)
+    print(emb.shape) # 10, 10, 300 for GLOVE
 
     num_topic = emb.shape[0]
     num_words = emb.shape[1]
@@ -48,19 +49,26 @@ def cal_distance(embeddings, method):
 
             coh = 0
             coh_ct = 0
+            # zero_ct = 0
             for w in range(num_words): # loop through each words in a topic
                 word = emb[t,w,:]
+                # if np.amax(word)==0:
+                #     zero_ct += 1
+
                 topic_center = topic_centers[t,:]
                 coh += np.linalg.norm(word-topic_center)
                 coh_ct += 1
+
             coh = coh / coh_ct
             coh_sum += coh
+            # print('zero_ct =', zero_ct)
 
         print('coh_sum =',coh_sum)
 
         # cal the dif between each topic center and the global center
         global_center = np.mean(topic_centers, axis=0) # average along the topics
         # print("global_center =", global_center)
+        # print("shape =", global_center.shape)
 
         dif_sum = 0
         for t in range(num_topic): # loop through each topic
@@ -126,10 +134,16 @@ def log_perplexity(self, chunk, total_docs=None):
 
 
 if __name__ == "__main__":
-    test = [[[0, 1, 2], [3, 4, 5]], 
-            [[0, 1, 2], [3, 4, 5]],  
-            [[0, 1, 2], [3, 4, 5]], 
-            [[0, 1, 2], [3, 4, 5]]]
-    score = cal_distance(test, 'coh-dif')
-    print('score =', score)
+    # test = [[[0, 1, 2], [3, 4, 5]], 
+    #         [[0, 1, 2], [3, 4, 5]],  
+    #         [[0, 1, 2], [3, 4, 5]], 
+    #         [[0, 1, 2], [3, 4, 5]]]
+    # score = cal_distance(test, 'coh-dif')
+    # print('score =', score)
 
+    topic_words = [['us','irq','lead','work','govt','troop','turn','announce','bushfire','reach'],
+                   ['baby', 'car', 'vlog', 'camera', 'house', 'family', 'ready', 'girl', 'tell', 'channel']
+                ]
+
+    score = embedding_distance(topic_words,'ELMO')
+    print('score =', score)
