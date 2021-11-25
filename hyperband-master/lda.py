@@ -34,7 +34,7 @@ def print_params(params):
     pprint({ k : v for k, v in params.items()})
     return None
 
-def try_params(n_doc, params):
+def try_params(n_doc, params, emb_model):
     
     print ("n_doc:", n_doc)
     print_params(params)
@@ -50,7 +50,7 @@ def try_params(n_doc, params):
     lda = LDA_classifier(params)
     t_w = lda.fit(data)
     
-    lda_score = lda.semantic_score(t_w)
+    lda_score = lda.semantic_score(t_w, emb_model)
     print('lda_score = {}'.format(lda_score))
 
     return {'lda_score': lda_score,'topic_keywords': t_w}
@@ -127,10 +127,11 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         print('scoring:', score)
         return score
     
-    def semantic_score(self, topic_keywords):
+    def semantic_score(self, topic_keywords, emb_model):
         
         score = 0
-        score = embedding_distance(topic_keywords, "BERT")
+
+        score = embedding_distance(topic_keywords, emb_model)
         # score = random()
         
         return score

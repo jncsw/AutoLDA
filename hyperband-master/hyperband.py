@@ -154,7 +154,7 @@ class Hyperband:
 
 class Hyperband_LDA:
     
-    def __init__(self, get_params_function, try_params_function, max_doc):
+    def __init__(self, get_params_function, try_params_function, max_doc, emb_model):
         self.get_params = get_params_function
         self.try_params = try_params_function
         
@@ -169,6 +169,8 @@ class Hyperband_LDA:
         self.counter = 0
         self.best_score = 0
         self.best_counter = -1
+
+        self.emb_model = emb_model
         
 
     # can be called multiple times
@@ -215,7 +217,7 @@ class Hyperband_LDA:
                     if dry_run:
                         result = {'lda_score': random()}
                     else:
-                        result = self.try_params(n_doc, t)        # <--- run configs here +++++++++
+                        result = self.try_params(n_doc, t, self.emb_model)        # <--- run configs here +++++++++
                         
                     assert(type(result) == dict)
                     assert('lda_score' in result)

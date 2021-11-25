@@ -9,3 +9,5 @@ __pycache__/
 # C extensions
 *.so
 
+# glove pretrained model in pkl file:
+glove_pretrained_840b_300d.pkl
