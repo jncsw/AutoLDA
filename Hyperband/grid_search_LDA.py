@@ -25,13 +25,6 @@ import sys
 sys.path.append('/home/kexin/Desktop/AutoLDA/Hyperband')
 from lda_metric import embedding_distance
 
-# topic_words = [['us','irq','lead','work','govt','troop','turn','announce','bushfire','reach'],
-#                    ['baby', 'car', 'vlog', 'camera', 'house', 'family', 'ready', 'girl', 'tell', 'channel']
-#                 ]
-
-# score = embedding_distance(topic_words,'GLOVE')
-# print('score =', score)
-# exit()
 
 np.set_printoptions(threshold= sys.maxsize)
 np.random.seed(5)
@@ -44,6 +37,8 @@ save_model_name = 'best_LDA.pkl'
 # select from 'coherence', 'perplexity', 'embedding'
 # the perplexity takes the negative so that it can be maximized
 score_type = 'embedding'
+# set the embedding model from ["BERT", "GLOVE", "W2V", "ELMo"] if use embedding
+embedding_model = 'GLOVE'
 
 param_dist = {"max_df": list(np.linspace(0.7, 1, 2)),					
 			  "min_df": list(np.linspace(0.1, 0.2, 2)),		 
@@ -108,6 +103,7 @@ def show_topics(vectorizer, lda_model, verbose=True, n_words=20):
 	return topic_keywords
 
 
+
 train_data = []; collcted_video_id = []
 for video_id in filenames:
 	try:
@@ -130,6 +126,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 		self.batch_size = batch_size
 		self.max_iter = max_iter
 		self.score_type = score_type
+		self.embedding_model = embedding_model
 		
 	def fit(self, train_data):
 		print('fitting:', self.max_df, self.min_df, self.topic_number, self.learning_decay, self.learning_offset, self.batch_size, self.max_iter)
@@ -155,14 +152,13 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 		elif (self.score_type == 'coherence'):
 			score = metric_coherence_gensim(measure='u_mass', topic_word_distrib=self.lda_model.components_, 
 				vocab=np.array(self.vectorizer.get_feature_names()), dtm=self.vectorizer.transform(train_data), return_mean=True)
-			print('scoring:', score)
+			print(score)
 		elif (self.score_type == 'embedding'):
 			topic_keywords = show_topics(self.vectorizer, self.lda_model, verbose=False, n_words=10)
-			# score = 
-			embedding_score_all = []
+			keywords = []
 			for i in range(0, len(topic_keywords)):
-				embedding_score_all.append(list(topic_keywords[i]), 'GLOVE')
-			score = sum(embedding_score_all)/len(embedding_score_all)
+				keywords.append(list(topic_keywords[i]))
+			score = embedding_distance(keywords, self.embedding_model)
 			print('scoring:', score)
 		return score
 
@@ -172,8 +168,9 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 
 if (not load_model):
 	cv = [(slice(None), slice(None))]
-	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, learning_decay=0.1, learning_offset=0.1, batch_size=64, max_iter=100, score_type=score_type)
+	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, learning_decay=0.1, learning_offset=0.1, batch_size=64, max_iter=100, score_type=score_type, embedding_model=embedding_model)
 	grid_search = GridSearchCV(lda, param_grid=param_dist, cv=cv, n_jobs=1)
+
 	time_all.append(time.time())
 	grid_search.fit(train_data)
 	print(grid_search.best_params_)
@@ -196,9 +193,8 @@ else:
 		best_LDA = pickle.load(f)
 	best_LDA.score(train_data)
 
-
-vectorizer, lda_model = best_LDA.get_model()
-show_topics(vectorizer, lda_model)
+# vectorizer, lda_model = best_LDA.get_model()
+# show_topics(vectorizer, lda_model)
 
 
 
