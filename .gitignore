@@ -11,3 +11,6 @@ __pycache__/
 
 # glove pretrained model in pkl file:
 glove_pretrained_840b_300d.pkl
+
+# other datasets
+abcnews-date-text.csv
