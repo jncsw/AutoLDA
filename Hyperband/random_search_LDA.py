@@ -23,8 +23,7 @@ from tmtoolkit.topicmod.evaluate import metric_coherence_gensim
 
 import sys
 sys.path.append('/home/kexin/Desktop/AutoLDA/Hyperband')
-from GenerateEmbeddings import GenEmb, Calc_Dist
-exit()
+from lda_metric import embedding_distance
 
 
 np.set_printoptions(threshold= sys.maxsize)
@@ -38,6 +37,8 @@ save_model_name = 'best_LDA.pkl'
 # select from 'coherence', 'perplexity', 'embedding'
 # the perplexity takes the negative so that it can be maximized
 score_type = 'embedding'
+# set the embedding model from ["BERT", "GLOVE", "W2V", "ELMo"] if use embedding
+embedding_model = 'GLOVE'
 
 param_dist = {"max_df": uniform(loc=0.7, scale=1),					
 			  "min_df": uniform(loc=0.1, scale=0.2),		 
@@ -88,17 +89,19 @@ for root, dirs, files in os.walk('../Transcripts'):
 
 
 # Show top n keywords for each topic
-def show_topics(best_LDA, n_words=20):
-	vectorizer, lda_model = best_LDA.get_model()
+def show_topics(vectorizer, lda_model, verbose=True, n_words=20):
+	# vectorizer, lda_model = best_LDA.get_model()
 	keywords = np.array(vectorizer.get_feature_names())
 	topic_keywords = []
 	for topic_weights in lda_model.components_:
 		top_keyword_locs = (-topic_weights).argsort()[:n_words]
 		topic_keywords.append(keywords.take(top_keyword_locs))
-	for i in range(0, len(topic_keywords)):
-		print("Topic " + str(i))
-		print(list(topic_keywords[i]))
+	if verbose:
+		for i in range(0, len(topic_keywords)):
+			print("Topic " + str(i))
+			print(list(topic_keywords[i]))
 	return topic_keywords
+
 
 
 train_data = []; collcted_video_id = []
@@ -123,6 +126,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 		self.batch_size = batch_size
 		self.max_iter = max_iter
 		self.score_type = score_type
+		self.embedding_model = embedding_model
 		
 	def fit(self, train_data):
 		print('fitting:', self.max_df, self.min_df, self.topic_number, self.learning_decay, self.learning_offset, self.batch_size, self.max_iter)
@@ -149,6 +153,13 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 			score = metric_coherence_gensim(measure='u_mass', topic_word_distrib=self.lda_model.components_, 
 				vocab=np.array(self.vectorizer.get_feature_names()), dtm=self.vectorizer.transform(train_data), return_mean=True)
 			print(score)
+		elif (self.score_type == 'embedding'):
+			topic_keywords = show_topics(self.vectorizer, self.lda_model, verbose=False, n_words=10)
+			keywords = []
+			for i in range(0, len(topic_keywords)):
+				keywords.append(list(topic_keywords[i]))
+			score = embedding_distance(keywords, self.embedding_model)
+			print('scoring:', score)
 		return score
 
 	def get_model(self):
@@ -157,7 +168,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 
 if (not load_model):
 	cv = [(slice(None), slice(None))]
-	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, learning_decay=0.1, learning_offset=0.1, batch_size=64, max_iter=100, score_type=score_type)
+	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, learning_decay=0.1, learning_offset=0.1, batch_size=64, max_iter=100, score_type=score_type, embedding_model=embedding_model)
 	random_search = RandomizedSearchCV(lda, param_distributions=param_dist,
 									   n_iter=2, cv=cv, random_state=100, n_jobs=1)
 
@@ -183,7 +194,8 @@ else:
 		best_LDA = pickle.load(f)
 	best_LDA.score(train_data)
 
-# show_topics(best_LDA)
+# vectorizer, lda_model = best_LDA.get_model()
+# show_topics(vectorizer, lda_model)
 
 
 
