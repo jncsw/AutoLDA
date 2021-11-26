@@ -27,8 +27,9 @@ def cal_distance(embeddings, method):
                     topic   words   embs
     """
     emb = np.array(embeddings)
-    print(emb)
-    print(emb.shape) # 10, 10, 300 for GLOVE
+    # print(embeddings)
+    # print(embeddings.type)
+    # print(emb.shape) # 10, 10, 300 for GLOVE
 
     num_topic = emb.shape[0]
     num_words = emb.shape[1]
@@ -76,6 +77,10 @@ def cal_distance(embeddings, method):
             dif_sum += dif
 
         print('dif_sum =', dif_sum)
+
+        # center distance
+        center_distance =  np.linalg.norm(topic_centers[0,:]-topic_centers[1,:])
+        print('center_distance =', center_distance)
 
         # cal the score dif_sum/coh_sum
         score = dif_sum / coh_sum
@@ -145,5 +150,8 @@ if __name__ == "__main__":
                    ['baby', 'car', 'vlog', 'camera', 'house', 'family', 'ready', 'girl', 'tell', 'channel']
                 ]
 
-    score = embedding_distance(topic_words,'ELMO')
+    topic_words = [['game','fish','moose','wildlife','hunting','bears','polar','bear','subsistence','management'],
+                    ['gas','oil','pipeline','agia','project','natural','north','producers','companies','tax'] ]
+
+    score = embedding_distance(topic_words,'GLOVE')
     print('score =', score)

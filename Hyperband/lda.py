@@ -19,7 +19,8 @@ space = {'max_df': hp.uniform('maxdf', 0.7, 1),
          'learning_decay': hp.uniform('kappa', 0.51, 1.0),
          'learning_offset': 1 + hp.randint('tau_0', 20),
          'batch_size': hp.choice( 'bs', ( 16, 32, 64, 128, 256 )),
-         'max_iter': hp.choice('max_iter',(5, 10, 20))
+         'max_iter': hp.choice('max_iter',(100,200))
+         # 'max_iter': hp.choice('max_iter',(5, 10, 20))
     }
 
 with open('train_data.pkl','rb') as pk:
@@ -35,6 +36,10 @@ def print_params(params):
     return None
 
 def try_params(n_doc, params, emb_model):
+
+    # select n_doc as resources
+    # n_doc = max(n_doc,556)
+    data = train_data[:n_doc] 
     
     print ("n_doc:", n_doc)
     print_params(params)
@@ -43,18 +48,15 @@ def try_params(n_doc, params, emb_model):
     # print(train_data)
     # print(len(train_data))
     
-    # select n_doc as resources
-    # n_doc = max(n_doc,556)
-    data = train_data[:n_doc] 
-    
     # run LDA on data
     lda = LDA_classifier(params)
-    t_w = lda.fit(data)
+    t_w, n_iter = lda.fit(data)
     
     lda_score = lda.semantic_score(t_w, emb_model)
     print('lda_score = {}'.format(lda_score))
+    print('n_iter = {}'.format(n_iter))
 
-    return {'lda_score': lda_score,'topic_keywords': t_w}
+    return {'lda_score': lda_score,'topic_keywords': t_w,'n_iter':n_iter}
 
 
 # def show_topics(lda, n_words=10):
@@ -100,6 +102,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         data_vectorized = self.vectorizer.fit_transform(train_data)
         self.lda_model.fit(data_vectorized)
         
+        n_iter = self.lda_model.n_iter_
         # return the topic_keywords
         
         keywords = np.array(self.vectorizer.get_feature_names())
@@ -115,7 +118,8 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         #     print("Topic " + str(i))
         #     print(list(topic_keywords[i]))
         
-        return topic_keywords
+
+        return topic_keywords, n_iter
 
     def predict(self, texts):
         text_vectorized = self.vectorizer.transform(texts)
