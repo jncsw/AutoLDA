@@ -12,20 +12,31 @@ from lda_metric import embedding_distance
 import pickle
 
 # define search space
-space = {'max_df': hp.uniform('maxdf', 0.7, 1),
-         'min_df': hp.uniform('mindf', 0.1, 0.2),
+space = {
+         # 'max_df': hp.uniform('maxdf', 0.7, 1),
+         # 'min_df': hp.uniform('mindf', 0.1, 0.3),
+         'max_df': hp.choice('maxdf', (0.6, 0.6)),
+         'min_df': hp.choice('mindf', (0.05, 0.05)),
+         
          'topic_number': 5+hp.randint('tn',15),
+         'doc_topic_prior': hp.uniform('alpha', 0.01, 1),
+         'topic_word_prior': hp.uniform('beta', 0.01, 1),
+         
          # 'learning_method': hp.choice('lm', ('online', 'batch')),
          'learning_decay': hp.uniform('kappa', 0.51, 1.0),
          'learning_offset': 1 + hp.randint('tau_0', 20),
          'batch_size': hp.choice( 'bs', ( 16, 32, 64, 128, 256 )),
-         'max_iter': hp.choice('max_iter',(100,200))
+         # 'max_iter': hp.choice('max_iter',(100,200))
          # 'max_iter': hp.choice('max_iter',(5, 10, 20))
     }
 
+print('loading train_data')
 with open('train_data.pkl','rb') as pk:
     train_data = pickle.load(pk)
 
+print('loading test_data')
+with open('test_data.pkl','rb') as pk:
+    test_data = pickle.load(pk)
 
 def get_params():
     params = sample(space)
@@ -35,28 +46,24 @@ def print_params(params):
     pprint({ k : v for k, v in params.items()})
     return None
 
-def try_params(n_doc, params, emb_model):
+def try_params(n_iterations, params):
 
-    # select n_doc as resources
-    # n_doc = max(n_doc,556)
-    data = train_data[:n_doc] 
-    
-    print ("n_doc:", n_doc)
-    print_params(params)
-    
-    # print('train_data =')
-    # print(train_data)
-    # print(len(train_data))
+    # print_params(params)
     
     # run LDA on data
-    lda = LDA_classifier(params)
-    t_w, n_iter = lda.fit(data)
+    lda = LDA_classifier(n_iterations, params)
     
-    lda_score = lda.semantic_score(t_w, emb_model)
-    print('lda_score = {}'.format(lda_score))
-    print('n_iter = {}'.format(n_iter))
+    t_w, n_iter, perplexity_train = lda.fit(train_data)
+    
+    # lda_score = lda.semantic_score(t_w, emb_model)
+    # perplexity_train = lda.score(train_data) 
+    perplexity_test = lda.score(test_data) # calculate the perplexity on the held-out test data
+    
+    # print('perplexity_train (lda.score) = {}'.format(perplexity_train))
+    print('perplexity_test = {:.4f}'.format(perplexity_test))
+    # print('n_iter = {}'.format(n_iter))
 
-    return {'lda_score': lda_score,'topic_keywords': t_w,'n_iter':n_iter}
+    return {'perplexity_test': perplexity_test, 'perplexity_train': perplexity_train, 'topic_keywords': t_w, 'n_iter':n_iter}
 
 
 # def show_topics(lda, n_words=10):
@@ -78,20 +85,26 @@ def try_params(n_doc, params, emb_model):
 
 class LDA_classifier(BaseEstimator, ClassifierMixin):
 
-    def __init__(self, params):
+    def __init__(self, n_iterations, params):
         self.max_df = params['max_df']
         self.min_df = params['min_df']
         self.topic_number = params['topic_number']
+        self.doc_topic_prior = params['doc_topic_prior']
+        self.topic_word_prior = params['topic_word_prior']
+    
         self.learning_decay = params['learning_decay']
         self.learning_offset = params['learning_offset']
         self.batch_size = params['batch_size']
-        self.max_iter = params['max_iter']
+
+        self.max_iter = n_iterations        
         
     def fit(self, train_data):
         # print('fitting:', self.max_df, self.min_df, self.topic_number)
         self.vectorizer = CountVectorizer(max_df=self.max_df, min_df=self.min_df)
         
-        self.lda_model = LatentDirichletAllocation(n_components=self.topic_number, 
+        self.lda_model = LatentDirichletAllocation(n_components=self.topic_number,
+                                                   doc_topic_prior=self.doc_topic_prior,
+                                                   topic_word_prior=self.topic_word_prior,
                                                    learning_method='online', 
                                                    learning_decay = self.learning_decay,
                                                    learning_offset = self.learning_offset,
@@ -103,8 +116,12 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         self.lda_model.fit(data_vectorized)
         
         n_iter = self.lda_model.n_iter_
-        # return the topic_keywords
+        perplexity_train = self.lda_model.bound_
         
+        print('n_iter =', n_iter)
+        print("perplexity_train = {:.4f}".format(perplexity_train))
+        
+        # return the topic_keywords
         keywords = np.array(self.vectorizer.get_feature_names())
     
         topic_keywords = []
@@ -118,8 +135,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         #     print("Topic " + str(i))
         #     print(list(topic_keywords[i]))
         
-
-        return topic_keywords, n_iter
+        return topic_keywords, n_iter, perplexity_train
 
     def predict(self, texts):
         text_vectorized = self.vectorizer.transform(texts)
@@ -129,13 +145,15 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         # score = self.lda_model.perplexity(self.data_vectorized)
         tmp = self.vectorizer.transform(train_data)
         score = self.lda_model.perplexity(tmp)
-        print('scoring:', score)
+        
+        # print('perplexity score =', score)
         return score
+    
     
     def semantic_score(self, topic_keywords, emb_model):
         
         score = 0
-
+        
         score = embedding_distance(topic_keywords, emb_model)
         # score = random()
         

@@ -22,9 +22,21 @@ with open( input_file, 'rb' ) as i_f:
 	results = pickle.load( i_f )
 
 
-for r in sorted(results, key = lambda x: x['lda_score'], reverse=True)[:results_to_show]:
-    print( "lda_score: {:.4} | {} seconds | {:.1f} n_doc | run {} ".format( 
-                 r['lda_score'], r['seconds'], r['n_doc'], r['counter']))
-    pprint(r['params'])
-    pprint(r['topic_keywords'])
-    print()
+# from low to high
+if results_to_show > 0:
+    print("The best {} configs are:\n".format(results_to_show))
+    for r in sorted(results, key = lambda x: x['loss'], reverse=False)[:results_to_show]: # from low to high
+        print( "loss: {:.4} | perplexity_train: {} | {} seconds | {:.1f} n_iter | run {} ".format( 
+                     r['loss'], r['perplexity_train'], r['config_seconds'], r['iterations'], r['counter']))
+        pprint(r['params'])
+        pprint(r['topic_keywords']) # in training
+        print()   
+
+else:
+    print("The worst {} configs are:\n".format(-results_to_show))
+    for r in sorted(results, key = lambda x: x['loss'], reverse=True)[:-results_to_show]: # from low to high
+        print( "loss: {:.4} | perplexity_train: {} | {} seconds | {:.1f} n_iter | run {} ".format( 
+                     r['loss'], r['perplexity_train'], r['config_seconds'], r['iterations'], r['counter']))
+        pprint(r['params'])
+        pprint(r['topic_keywords'])
+        print()    

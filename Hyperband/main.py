@@ -8,21 +8,10 @@ import sys
 import pickle
 from pprint import pprint
 import numpy as np
-# import matplotlib.pyplot as plt
 
-from hyperband import Hyperband, Hyperband_LDA
-from Embeddings.GLOVE import load_GLOVE
+from hyperband import Hyperband, Hyperband_LDA, Hyperband_LDA_Iter
+# from Embeddings.GLOVE import load_GLOVE
 
-#from defs.gb import get_params, try_params
-#from defs.rf import get_params, try_params
-#from defs.xt import get_params, try_params
-#from defs.rf_xt import get_params, try_params
-#from defs.sgd import get_params, try_params
-# from defs.keras_mlp import get_params, try_params
-#from defs.polylearn_fm import get_params, try_params
-#from defs.polylearn_pn import get_params, try_params
-#from defs.xgb import get_params, try_params
-#from defs.meta import get_params, try_params
 from lda import get_params, try_params
 
 '''
@@ -95,45 +84,51 @@ with open('score_vs_time.csv','w') as f_score:
         f_score.write('{},{}'.format(score[i], runtime[i]))
 '''
 
-#-------------------------------------------------- hyperband / Data-based for LDA
+#-------------------------------------------------- hyperband for LDA
 
 try:
-    output_file = sys.argv[2]
+    output_file = sys.argv[1]
     if not output_file.endswith( '.pkl' ):
         output_file += '.pkl'   
 except IndexError:
-    output_file = 'results_HB_LDA.pkl'
+    output_file = 'results_hb_lda.pkl'
     
 print("HB will save results to", output_file)
 
-emb_model = sys.argv[1]
+# emb_model = sys.argv[2]
+# print('emb_model =', emb_model)
 
-hb = Hyperband_LDA(get_params, try_params, 556, emb_model)
+# if emb_model == 'GLOVE':
+#     from Embeddings.GLOVE import load_GLOVE
+    
+hb = Hyperband_LDA_Iter(get_params, try_params)
 # results = hb.run(dry_run=True)
 results = hb.run()
-
-
-# show the best 10 configs
-print("\n---------------- {} total, best 10 are:\n".format(len(results)))
-
-for r in sorted(results, key = lambda x: x['lda_score'], reverse=True)[:10]:
-    print( "lda_score: {:.4} | {} seconds | {:.1f} n_doc | run {} ".format( 
-                 r['lda_score'], r['seconds'], r['n_doc'], r['counter']))
-    pprint(r['params'])
-    print()
 
 print ("saving results ...")
 with open(output_file, 'wb') as f:
     pickle.dump(results, f)
+    
 
-sta_loss=[sub['best_score'] for sub in results]
+# show the best 10 configs
+print("\n---------------- {} total, best 10 are:\n".format(len(results)))
+
+for r in sorted(results, key = lambda x: x['loss'], reverse=False)[:10]: # from low to high
+    print( "loss: {:.4} | perplexity_train: {} | {} seconds | {:.1f} n_iter | run {} ".format( 
+                 r['loss'], r['perplexity_train'], r['config_seconds'], r['iterations'], r['counter']))
+    pprint(r['params'])
+    pprint(r['topic_keywords'])
+    print()   
+
+
+sta_loss=[sub['best_loss'] for sub in results]
 sta_sec=[sub['seconds'] for sub in results]
 
 score = sta_loss
 runtime = sta_sec
 print('saving score_vs_time.csv ...')
-with open('score_vs_time.csv','w') as f_score:
-    f_score.write('Score,Time(s)\n')
+with open('loss_vs_time.csv','w') as f_score:
+    f_score.write('Loss,Time(s)\n')
     for i in range(len(score)):
         f_score.write('{},{}\n'.format(score[i], runtime[i]))
 
