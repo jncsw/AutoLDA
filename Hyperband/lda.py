@@ -18,7 +18,7 @@ space = {
          'max_df': hp.choice('maxdf', (0.6, 0.6)),
          'min_df': hp.choice('mindf', (0.05, 0.05)),
          
-         'topic_number': 5+hp.randint('tn',15),
+         'topic_number': 5+hp.randint('tn',5),
          'doc_topic_prior': hp.uniform('alpha', 0.01, 1),
          'topic_word_prior': hp.uniform('beta', 0.01, 1),
          
