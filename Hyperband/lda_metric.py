@@ -1,6 +1,6 @@
 import numpy as np
 # from gensim.models import LdaModel
-from GenerateEmbeddings import GenEmb, Calc_Dist
+# from GenerateEmbeddings import GenEmb, Calc_Dist
 
 
 def embedding_distance(topic_words, model):
