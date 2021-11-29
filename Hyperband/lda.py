@@ -55,6 +55,8 @@ def try_params(n_iterations, params):
     
     t_w, n_iter, perplexity_train = lda.fit(train_data)
     
+    
+
     # lda_score = lda.semantic_score(t_w, emb_model)
     # perplexity_train = lda.score(train_data) 
     perplexity_test = lda.score(test_data) # calculate the perplexity on the held-out test data
@@ -120,6 +122,12 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         
         print('n_iter =', n_iter)
         print("perplexity_train = {:.4f}".format(perplexity_train))
+
+
+        params = self.lda_model.get_params()
+        print("===== params:",params)
+        perplexity = self.lda_model.perplexity(data_vectorized)
+        print("===== perplexity:",perplexity)
         
         # return the topic_keywords
         keywords = np.array(self.vectorizer.get_feature_names())
