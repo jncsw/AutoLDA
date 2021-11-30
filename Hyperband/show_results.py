@@ -53,7 +53,7 @@ def main():
     with open('best_10_configs.pkl', 'wb') as f:
         pickle.dump(best_10, f)
 
-    # save worst 10 configs
+    # save worst 10 configs, pointless
     worst_10 = sorted(results, key = lambda x: x['loss'], reverse=True)[:10]
     print ("saving worst_10 ......")
     with open('worst_10_configs.pkl', 'wb') as f:

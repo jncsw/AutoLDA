@@ -13,19 +13,21 @@ import pickle
 
 # define search space
 space = {
-         # 'max_df': hp.uniform('maxdf', 0.7, 1),
-         # 'min_df': hp.uniform('mindf', 0.1, 0.3),
-         'max_df': hp.choice('maxdf', (0.6, 0.6)),
-         'min_df': hp.choice('mindf', (0.05, 0.05)),
+         'max_df': hp.uniform('maxdf', 0.5, 1),
+         'min_df': hp.uniform('mindf', 0.1, 0.5),
+         # 'max_df': hp.choice('maxdf', (0.6, 0.6)),
+         # 'min_df': hp.choice('mindf', (0.05, 0.05)),
          
-         'topic_number': 5+hp.randint('tn',5),
+         # 'topic_number': 7
+         'topic_number': 5 + hp.randint('tn',10),
+         
          'doc_topic_prior': hp.uniform('alpha', 0.01, 1),
          'topic_word_prior': hp.uniform('beta', 0.01, 1),
          
          # 'learning_method': hp.choice('lm', ('online', 'batch')),
-         'learning_decay': hp.uniform('kappa', 0.51, 1.0),
-         'learning_offset': 1 + hp.randint('tau_0', 20),
-         'batch_size': hp.choice( 'bs', ( 16, 32, 64, 128, 256 )),
+         # 'learning_decay': hp.uniform('kappa', 0.51, 1.0),
+         # 'learning_offset': 1 + hp.randint('tau_0', 20),
+         # 'batch_size': hp.choice( 'bs', ( 16, 32, 64, 128, 256 )),
          # 'max_iter': hp.choice('max_iter',(100,200))
          # 'max_iter': hp.choice('max_iter',(5, 10, 20))
     }
@@ -48,15 +50,14 @@ def print_params(params):
 
 def try_params(n_iterations, params):
 
-    # print_params(params)
+    print_params(params)
     
     # run LDA on data
     lda = LDA_classifier(n_iterations, params)
     
-    t_w, n_iter, perplexity_train = lda.fit(train_data)
+    t_w, n_iter, perplexity_train, d_t = lda.fit(train_data)
     
     
-
     # lda_score = lda.semantic_score(t_w, emb_model)
     # perplexity_train = lda.score(train_data) 
     perplexity_test = lda.score(test_data) # calculate the perplexity on the held-out test data
@@ -65,7 +66,11 @@ def try_params(n_iterations, params):
     print('perplexity_test = {:.4f}'.format(perplexity_test))
     # print('n_iter = {}'.format(n_iter))
 
-    return {'perplexity_test': perplexity_test, 'perplexity_train': perplexity_train, 'topic_keywords': t_w, 'n_iter':n_iter}
+    return {'perplexity_test': perplexity_test, 
+            'perplexity_train': perplexity_train, 
+            'topic_keywords': t_w, 
+            'n_iter':n_iter, 
+            'doc_topic_distr': d_t}
 
 
 # def show_topics(lda, n_words=10):
@@ -91,14 +96,14 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         self.max_df = params['max_df']
         self.min_df = params['min_df']
         self.topic_number = params['topic_number']
-        self.doc_topic_prior = params['doc_topic_prior']
-        self.topic_word_prior = params['topic_word_prior']
+        # self.doc_topic_prior = params['doc_topic_prior']
+        # self.topic_word_prior = params['topic_word_prior']
     
-        self.learning_decay = params['learning_decay']
-        self.learning_offset = params['learning_offset']
-        self.batch_size = params['batch_size']
+        # self.learning_decay = params['learning_decay']
+        # self.learning_offset = params['learning_offset']
+        # self.batch_size = params['batch_size']
 
-        self.max_iter = n_iterations        
+        # self.max_iter = n_iterations        
         
     def fit(self, train_data):
         # print('fitting:', self.max_df, self.min_df, self.topic_number)
@@ -108,10 +113,10 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
                                                    doc_topic_prior=self.doc_topic_prior,
                                                    topic_word_prior=self.topic_word_prior,
                                                    learning_method='online', 
-                                                   learning_decay = self.learning_decay,
-                                                   learning_offset = self.learning_offset,
-                                                   batch_size = self.batch_size,                                                 
-                                                   max_iter=self.max_iter,
+                                                   # learning_decay = self.learning_decay,
+                                                   # learning_offset = self.learning_offset,
+                                                   # batch_size = self.batch_size,                                                 
+                                                   # max_iter=self.max_iter,
                                                    random_state=100)
         
         data_vectorized = self.vectorizer.fit_transform(train_data)
@@ -123,15 +128,19 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         print('n_iter =', n_iter)
         print("perplexity_train = {:.4f}".format(perplexity_train))
 
+        # params = self.lda_model.get_params()
+        # print("===== params:\n", params)
 
-        params = self.lda_model.get_params()
-        print("===== params:",params)
-        perplexity = self.lda_model.perplexity(data_vectorized)
-        print("===== perplexity:",perplexity)
+        # perplexity = self.lda_model.perplexity(data_vectorized)
+        # print("===== perplexity:",perplexity)
         
+        # return the doc_topic_distr
+        doc_topic_distr = self.lda_model.transform(data_vectorized)
+        print(doc_topic_distr.shape)
+        print(doc_topic_distr[0,:])
+
         # return the topic_keywords
         keywords = np.array(self.vectorizer.get_feature_names())
-    
         topic_keywords = []
         n_words = 10
         
@@ -143,7 +152,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         #     print("Topic " + str(i))
         #     print(list(topic_keywords[i]))
         
-        return topic_keywords, n_iter, perplexity_train
+        return topic_keywords, n_iter, perplexity_train, doc_topic_distr
 
     def predict(self, texts):
         text_vectorized = self.vectorizer.transform(texts)
