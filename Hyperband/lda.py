@@ -96,14 +96,14 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         self.max_df = params['max_df']
         self.min_df = params['min_df']
         self.topic_number = params['topic_number']
-        # self.doc_topic_prior = params['doc_topic_prior']
-        # self.topic_word_prior = params['topic_word_prior']
+        self.doc_topic_prior = params['doc_topic_prior']
+        self.topic_word_prior = params['topic_word_prior']
     
         # self.learning_decay = params['learning_decay']
         # self.learning_offset = params['learning_offset']
         # self.batch_size = params['batch_size']
 
-        # self.max_iter = n_iterations        
+        self.max_iter = n_iterations        
         
     def fit(self, train_data):
         # print('fitting:', self.max_df, self.min_df, self.topic_number)
@@ -116,7 +116,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
                                                    # learning_decay = self.learning_decay,
                                                    # learning_offset = self.learning_offset,
                                                    # batch_size = self.batch_size,                                                 
-                                                   # max_iter=self.max_iter,
+                                                   max_iter=self.max_iter,
                                                    random_state=100)
         
         data_vectorized = self.vectorizer.fit_transform(train_data)
