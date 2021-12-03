@@ -44,8 +44,8 @@ InputData = [
 def GenEmb(InputData, model):
 
     # print("++++++++++ Model = ", model)
-
-    if model == "ELMo":
+    # print("++++++++++ InputData = ", InputData)
+    if model == "ELMO":
         return genEmbeddings_ELMo(InputData)
 
     AllEmb = []
@@ -60,8 +60,8 @@ def GenEmb(InputData, model):
                 emb = genEmbeddings_GLOVE(keyword)
             elif model == "W2V":                
                 emb = genEmbeddings_W2V(keyword)
-            elif model == "ELMO":
-                emb = genEmbeddings_ELMo(keyword)
+            # elif model == "ELMO":
+            #     emb = genEmbeddings_ELMo(keyword)
             topicEmb.append(emb)
         AllEmb.append(topicEmb)
 

@@ -14,7 +14,7 @@ def embedding_distance(topic_words, model):
     #     #score = Calc_Dist(AllEmb)
 
     embeddings = GenEmb(topic_words, model)
-    
+    # print(np.array(embeddings).shape)
     # distance
     score = cal_distance(embeddings, 'coh-dif')
 

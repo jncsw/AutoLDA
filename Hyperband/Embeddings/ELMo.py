@@ -51,7 +51,7 @@ def genEmbeddings_ELMo(text):
     processedText = []
     for t in text:
         processedText.append(" ".join(t))
-
+    # print("processedText=",processedText)
     init = tf.initialize_all_variables()
     sess = tf.Session()
     sess.run(init)
@@ -59,7 +59,9 @@ def genEmbeddings_ELMo(text):
     processedText,
     signature="default",
     as_dict=True)["elmo"]
-    return sess.run(embeddings)
+    res = sess.run(embeddings)
+    
+    return res
 
 if __name__ == "__main__":
     print("Embedding=",genEmbeddings_ELMo("watch"))
