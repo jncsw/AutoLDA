@@ -2,6 +2,8 @@
 
 "load pickled results, show the best"
 
+"$ python show_results.py results_hb_w2v.pkl 10"
+
 import sys
 import pickle
 
@@ -14,6 +16,7 @@ def print_topicwords(topicwords):
         for w in t:
             print(w, end=' ')
     print()
+
 
 def main():
     try:
@@ -31,33 +34,43 @@ def main():
     	results = pickle.load( i_f )
 
 
-    if results_to_show > 0: # from low to high
+    if results_to_show > 0: # from high to low, the higher the better
         print("The best {} configs are:\n".format(results_to_show))
-        configs_show = sorted(results, key = lambda x: x['loss'], reverse=False)[:results_to_show]
+        configs_show = sorted(results, key = lambda x: x['score'], reverse=True)[:results_to_show]
 
-    else:# from high to low
+    else:
         print("The worst {} configs are:\n".format(-results_to_show))
-        configs_show = sorted(results, key = lambda x: x['loss'], reverse=True)[:-results_to_show]
+        configs_show = sorted(results, key = lambda x: x['score'], reverse=False)[:-results_to_show]
 
     for r in configs_show: 
-        print( "loss: {:.4} | perplexity_train: {} | {} seconds | {:.1f} n_iter | run {} ".format( 
-                     r['loss'], r['perplexity_train'], r['config_seconds'], r['iterations'], r['counter']))
+        print( "score: {:.4} | {} seconds | {:.1f} n_iter | run {} ".format( 
+                     r['score'], r['config_seconds'], r['iterations'], r['counter']))
+        
         pprint(r['params'])
         print('topic_words in train_data:')
         print_topicwords(r['topic_keywords'])
         print()    
 
     # save best 10 configs
-    best_10 = sorted(results, key = lambda x: x['loss'], reverse=False)[:10]
+    best_10 = sorted(results, key = lambda x: x['score'], reverse=True)[:10]
     print ("saving best_10 ......")
     with open('best_10_configs.pkl', 'wb') as f:
         pickle.dump(best_10, f)
 
-    # save worst 10 configs, pointless
-    worst_10 = sorted(results, key = lambda x: x['loss'], reverse=True)[:10]
-    print ("saving worst_10 ......")
-    with open('worst_10_configs.pkl', 'wb') as f:
-        pickle.dump(worst_10, f)
+    # save worst 10 configs, pointless/incorrect
+    # worst_10 = sorted(results, key = lambda x: x['loss'], reverse=True)[:10]
+    # print ("saving worst_10 ......")
+    # with open('worst_10_configs.pkl', 'wb') as f:
+    #     pickle.dump(worst_10, f)
+    
+    score = [sub['best_score'] for sub in results]
+    runtime = [sub['seconds'] for sub in results]
+    
+    print('saving score_vs_time.csv ...')
+    with open('score_vs_time.csv','w') as f_score:
+        f_score.write('score,Time(s)\n')
+        for i in range(len(score)):
+            f_score.write('{},{}\n'.format(score[i], runtime[i]))
 
 if __name__ == '__main__':
     main()

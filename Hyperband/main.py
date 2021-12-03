@@ -113,24 +113,25 @@ with open(output_file, 'wb') as f:
 # show the best 10 configs
 print("\n---------------- {} total, best 10 are:\n".format(len(results)))
 
-for r in sorted(results, key = lambda x: x['loss'], reverse=False)[:10]: # from low to high
-    print( "loss: {:.4} | perplexity_train: {} | {} seconds | {:.1f} n_iter | run {} ".format( 
-                 r['loss'], r['perplexity_train'], r['config_seconds'], r['iterations'], r['counter']))
+for r in sorted(results, key = lambda x: x['score'], reverse=False)[:10]: # from low to high
+    print( "lda_score: {:.4} | {} seconds | {:.1f} n_iter | run {} ".format( 
+                 r['score'], r['config_seconds'], r['iterations'], r['counter']))
+    
     pprint(r['params'])
     pprint(r['topic_keywords'])
     print()   
 
 
-sta_loss=[sub['best_loss'] for sub in results]
-sta_sec=[sub['seconds'] for sub in results]
+# sta_loss=[sub['best_score'] for sub in results]
+# sta_sec=[sub['seconds'] for sub in results]
 
-score = sta_loss
-runtime = sta_sec
-print('saving score_vs_time.csv ...')
-with open('loss_vs_time.csv','w') as f_score:
-    f_score.write('Loss,Time(s)\n')
-    for i in range(len(score)):
-        f_score.write('{},{}\n'.format(score[i], runtime[i]))
+# score = sta_loss
+# runtime = sta_sec
+# print('saving score_vs_time.csv ...')
+# with open('score_vs_time.csv','w') as f_score:
+#     f_score.write('score,Time(s)\n')
+#     for i in range(len(score)):
+#         f_score.write('{},{}\n'.format(score[i], runtime[i]))
 
 print("\nAuto-LDA finished.")
 
