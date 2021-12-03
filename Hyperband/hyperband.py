@@ -22,7 +22,6 @@ class Hyperband:
         self.best_loss = np.inf
         self.best_counter = -1
         
-
     # can be called multiple times
     def run(self, skip_last=0, dry_run=False):
         
@@ -151,7 +150,6 @@ class Hyperband:
                 self.results.append( result )
 
             return self.results    
-
 
 # data-based
 
@@ -366,7 +364,7 @@ class Hyperband_LDA:
 
 class Hyperband_LDA_Iter:
     
-    def __init__( self, get_params_function, try_params_function):
+    def __init__( self, get_params_function, try_params_function, emb_model):
         self.get_params = get_params_function
         self.try_params = try_params_function
         
@@ -379,9 +377,10 @@ class Hyperband_LDA_Iter:
 
         self.results = []    # list of dicts
         self.counter = 0
-        self.best_loss = np.inf
+        self.best_score = 0
         self.best_counter = -1
         
+        self.emb_model = emb_model
 
     # can be called multiple times
     def run(self, skip_last=0, dry_run=False):
@@ -421,9 +420,8 @@ class Hyperband_LDA_Iter:
                     
                     config_start = time()
                     self.counter += 1
-                    print ("\n{} | {} | lowest loss so far: {:.4f} (run {})\n".format( 
-                        self.counter, ctime(), self.best_loss, self.best_counter))
-                    
+                    print ("\n{} | {} | best lda_score so far: {:.4f} (run {})\n".format( 
+                        self.counter, ctime(), self.best_score, self.best_counter))
                     
                     
                     #start_time = time()
@@ -431,35 +429,35 @@ class Hyperband_LDA_Iter:
                     if dry_run:
                         result = {'loss': random(), 'log_loss': random(), 'auc': random()}
                     else:
-                        result = self.try_params(n_iterations, t)        # <--- run configs here +++++++++
+                        result = self.try_params(n_iterations, t, self.emb_model)        # <--- run configs here +++++++++
                         
                     assert(type(result) == dict)
-                    assert('perplexity_test' in result )
+                    assert('lda_score' in result )
                     
                     config_sec = time() - config_start
                     seconds = time() - start_time
                     
                     print('config_sec = {:.4f} seconds | Cumulative {:.4f} seconds'.format(config_sec, seconds))
                     
-                    loss = result['perplexity_test']    
-                    val_losses.append(loss)
+                    lda_score = result['lda_score']    
+                    val_losses.append(lda_score)
                     
                     # early_stop = result.get('early_stop', False)
                     # early_stops.append(early_stop)
                     
                     # keeping track of the best result so far (for display only)
                     # could do it be checking results each time, but hey
-                    if loss < self.best_loss:
-                        self.best_loss = loss
+                    if lda_score > self.best_score:
+                        self.best_score = lda_score
                         self.best_counter = self.counter
                     
-                    result['best_loss'] = self.best_loss
+                    result['best_score'] = self.best_score
                     result['counter'] = self.counter
                     result['config_seconds'] = config_sec
                     result['seconds'] = seconds
                     result['params'] = t
                     result['iterations'] = n_iterations
-                    result['loss'] = loss
+                    result['score'] = lda_score
                     
                     self.results.append(result)
                 

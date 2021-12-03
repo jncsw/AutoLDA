@@ -41,6 +41,7 @@ def getWord2Vec(word_vectors, word):
     try:
         return word_vectors[word]
     except KeyError:
+        print("warning: key <{}> not found in W2V vectors, return all zeros.".format(word))
         return np.zeros(100)
 
 

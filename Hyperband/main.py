@@ -95,13 +95,13 @@ except IndexError:
     
 print("HB will save results to", output_file)
 
-# emb_model = sys.argv[2]
-# print('emb_model =', emb_model)
+emb_model = sys.argv[2]
+print('emb_model =', emb_model)
 
 # if emb_model == 'GLOVE':
 #     from Embeddings.GLOVE import load_GLOVE
     
-hb = Hyperband_LDA_Iter(get_params, try_params)
+hb = Hyperband_LDA_Iter(get_params, try_params, emb_model)
 # results = hb.run(dry_run=True)
 results = hb.run()
 

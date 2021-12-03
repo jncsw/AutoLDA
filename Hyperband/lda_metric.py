@@ -1,6 +1,6 @@
 import numpy as np
 # from gensim.models import LdaModel
-# from GenerateEmbeddings import GenEmb, Calc_Dist
+from GenerateEmbeddings import GenEmb, Calc_Dist
 
 
 def embedding_distance(topic_words, model):
@@ -80,7 +80,7 @@ def cal_distance(embeddings, method):
 
         # center distance
         center_distance =  np.linalg.norm(topic_centers[0,:]-topic_centers[1,:])
-        print('center_distance =', center_distance)
+        print('center_distance bt topic0 and topic1 =', center_distance)
 
         # cal the score dif_sum/coh_sum
         score = dif_sum / coh_sum
