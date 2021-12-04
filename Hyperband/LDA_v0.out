@@ -1,0 +1,21 @@
+loading GLOVE pretrained model ......
+GLOVE loaded.
+
+coh_sum = 75.45947399139405
+dif_sum = 31.890773057937622
+center_distance = 6.959775
+scoring: [472.59978975778665, 0.4226211948094772]
+Topic 0
+['people', 'right', 'guy', 'mask', 'take', 'lot', 'come', 'car', 'look', 'time', 'say', 'store', 'let', 're', 'man', 'back', 'home', 'stay', 'even', 'think']
+Topic 1
+['guy', 'make', 'video', 'right', 'day', 'little', 've', 'today', 'think', 'vlog', 'look', 'put', 'use', 'show', 'love', 'actually', 'let', 'take', 'also', 'try']
+Topic 2
+['today', 'jacket', 'dress', 'small', 'finish', 'old', 'bed', 'put', 'morning', 'actually', 'day', 'fire', 'history', 'makeup', 'dirty', 'finished', 'forgot', 'lazy', 'cover', 'mood']
+Topic 3
+['think', 'guy', 'make', 've', 'little', 'thing', 'back', 'right', 'look', 'video', 'work', 'kind', 'mean', 'time', 'people', 'home', 'also', 'much', 'today', 'take']
+Topic 4
+['thing', 'think', 'time', 'say', 'work', 'right', 'people', 'day', 've', 'make', 'feel', 'video', 'lot', 'guy', 'little', 'take', 'come', 'kind', 'today', 'look']
+Topic 5
+['make', 'little', 'think', 'guy', 'day', 've', 'put', 'time', 'eat', 'also', 'look', 'kind', 'use', 'try', 'thing', 'love', 'food', 'bit', 'well', 'need']
+Topic 6
+['little', 'look', 'think', 'guy', 'right', 'kind', 'stuff', 'put', 'use', 'thing', 've', 'make', 'take', 'actually', 'feel', 'lot', 'much', 'apartment', 'love', 'let']

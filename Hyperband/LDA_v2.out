@@ -1,0 +1,37 @@
+loading GLOVE pretrained model ......
+GLOVE loaded.
+
+coh_sum = 162.6460892677307
+dif_sum = 75.57238578796387
+center_distance = 7.074036
+scoring: [476.09892118880333, 0.46464311640204664]
+Topic 0
+['mask', 'wear', 'glove', 'take', 'people', 'wipe', 'guy', 'hand', 'touch', 'even', 'keep', 'egg', 'rice', 'safe', 'sure', 'home', 'protect', 'eat', 'lot', 'wash']
+Topic 1
+['love', 'tooth', 'guy', 'anyway', 'right', 'color', 'hair', 'absolutely', 'video', 'towel', 'post', 'new', 'little', 'let', 'also', 'put', 'switch', 'mirror', 'turn', 'sorry']
+Topic 2
+['make', 'people', 'take', 'guy', 'right', 'think', 'back', 'come', 'little', 'time', 'look', 'day', 'put', 'thing', 'today', 'need', 'video', 'work', 'give', 'say']
+Topic 3
+['size', 'make', 'little', 'think', 'back', 'lot', 'kind', 'guy', 'love', 'look', 'next', 've', 'pretty', 'work', 'well', 'also', 'time', 'store', 'right', 'thing']
+Topic 4
+['day', 'think', 've', 'work', 'time', 'make', 'guy', 'thing', 'little', 'video', 'right', 'feel', 'today', 'take', 'look', 'lot', 'kind', 'start', 'try', 'let']
+Topic 5
+['make', 'also', 'little', 've', 'eat', 'think', 'day', 'put', 'guy', 'need', 'time', 'thing', 'add', 'love', 'water', 'cook', 'smoothie', 'dinner', 'watch', 'chicken']
+Topic 6
+['little', 'use', 'look', 'make', 'think', 'guy', 'put', 'try', 'kind', 'take', 've', 'bit', 'actually', 'love', 'show', 'hair', 'feel', 'also', 'much', 'right']
+Topic 7
+['flight', 'airport', 'travel', 'come', 'fly', 'plane', 'back', 'hour', 'take', 'tell', 'day', 'trip', 'time', 'bag', 'happen', 'guy', 've', 're', 'night', 'hotel']
+Topic 8
+['lip', 'vanilla', 'sleep', 'size', 'train', 'thing', 'mask', 'sell', 'point', 'ask', 'smell', 'one', 'glass', 'carry', 'night', 'speak', 'butter', 'leave', 'feel', 'yoga']
+Topic 9
+['guy', 'right', 'video', 'let', 'make', 'today', 'look', 'show', 'vlog', 'think', 'time', 'say', 'much', 'little', 'day', 'pretty', 'back', 'love', 'man', 'camera']
+Topic 10
+['people', 'right', 'look', 'lot', 'store', 'time', 'take', 'walk', 'think', 'open', 'grocery', 'car', 'little', 'let', 'pretty', 'thing', 'mask', 'actually', 'guy', 'place']
+Topic 11
+['guy', 'people', 'day', 'take', 'make', 'think', 'feel', 'thing', 'time', 'look', 'lot', 'right', 'little', 'put', 'today', 'say', 'even', 'much', 'try', 'work']
+Topic 12
+['size', 'back', 've', 'little', 'day', 'look', 'time', 'morning', 'find', 'think', 'thing', 'much', 'kind', 'also', 'last', 'love', 'need', 'lot', 'store', 'actually']
+Topic 13
+['apartment', 'little', 'stuff', 'guy', 'move', 'look', 'room', 'right', 'thing', 'think', 'put', 'much', 'make', 'lot', 've', 'also', 'come', 'work', 'kind', 'actually']
+Topic 14
+['people', 'say', 'thing', 'think', 'time', 'man', 'right', 'come', 'mean', 'video', 'lot', 've', 'make', 'stuff', 'even', 'work', 'kind', 'happen', 'take', 're']

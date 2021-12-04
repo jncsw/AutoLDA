@@ -1,0 +1,37 @@
+loading GLOVE pretrained model ......
+GLOVE loaded.
+
+coh_sum = 161.81020092964175
+dif_sum = 86.56795358657837
+center_distance = 7.0113378
+scoring: [707.4759748371282, 0.5349968857910251]
+Topic 0
+['life', 'happen', 'man', 'live', 'tell', 'family', 'crazy', 'many', 'sure', 'bad', 'whole', 'call', 'house', 'close', 'virus', 'business', 'friend', 'school', 'leave', 'world']
+Topic 1
+['special', 'thank', 'vlog', 'happen', 'reallyn', 'eat', 'favorite', 'family', 'never', 'care', 'sure', 'whole', 'grocery', 'face', 'bad', 'basically', 'sponsor', 'crazy', 'welcome', 'quarantine']
+Topic 2
+['food', 'eat', 'buy', 'favorite', 'chicken', 'egg', 'bread', 'rice', 'toast', 'new', 'super', 'milk', 'coffee', 'cook', 'fruit', 'grocery', 'dinner', 'excited', 'never', 'store']
+Topic 3
+['apartment', 'move', 'size', 'room', 'live', 'new', 'vlog', 'find', 'definitely', 'year', 'space', 'class', 'top', 'price', 'super', 'wear', 'different', 'maybe', 'like', 'picture']
+Topic 4
+['never', 'call', 'life', 'class', 'literally', 'bad', 'finish', 'apartment', 'end', 'tell', 'whole', 'voice', 'thank', 'room', 'do', 'face', 'shower', 'nice', 'night', 'hour']
+Topic 5
+['dress', 'brand', 'item', 'top', 'buy', 'quick', 'pant', 'sell', 'milk', 'cute', 'finish', 'ship', 'heavy', 'large', 'hold', 'pasta', 'emergency', 'ice', 'market', 'cream']
+Topic 6
+['child', 'happen', 'family', 'parent', 'kid', 'channel', 'case', 'youtube', 'process', 'situation', 'stop', 'ever', 'especially', 'life', 'never', 'care', 'sad', 'help', 'fact', 'whole']
+Topic 7
+['eat', 'hair', 'morning', 'do', 'quarantine', 'literally', 'nice', 'vlog', 'finish', 'clean', 'always', 'face', 'shower', 'makeup', 'night', 'basically', 'like', 'sure', 'minute', 'ready']
+Topic 8
+['book', 'read', 'camera', 'vlog', 'vlogge', 'flight', 'recommend', 'board', 'page', 'room', 'tell', 'phone', 'sure', 'play', 'different', 'highly', 'clean', 'end', 'game', 'app']
+Topic 9
+['walk', 'store', 'mask', 'open', 'car', 'wear', 'nice', 'close', 'place', 'empty', 'picture', 'grocery', 'park', 'crazy', 'head', 'line', 'thank', 'usually', 'stop', 'safe']
+Topic 10
+['pick', 'test', 'exciting', 'end', 'sign', 'music', 'line', 'cheese', 'tomorrow', 'random', 'load', 'bless', 'believe', 'mmm', 'print', 'buddy', 'drive', 'result', 'eventually', 'cover']
+Topic 11
+['room', 'spot', 'name', 'bottom', 'eyebrow', 'rock', 'message', 'rain', 'check', 'walk', 'top', 'step', 'event', 'email', 'hopefully', 'suppose', 'line', 'win', 'blow', 'run']
+Topic 12
+['art', 'artist', 'course', 'write', 'music', 'book', 'learn', 'brother', 'whole', 'dream', 'online', 'beautiful', 'focus', 'gift', 'maybe', 'vegan', 'option', 'study', 'life', 'dad']
+Topic 13
+['eyebrow', 'match', 'thick', 'never', 'chance', 'dark', 'year', 'almost', 'color', 'ever', 'hair', 'row', 'exact', 'grow', 'run', 'sure', 'peanut', 'process', 'worth', 'always']
+Topic 14
+['morning', 'live', 'walk', 'dog', 'die', 'pick', 'breakfast', 'yesterday', 'state', 'mask', 'normally', 'free', 'write', 'pant', 'scary', 'jacket', 'case', 'roommate', 'maybe', 'several']

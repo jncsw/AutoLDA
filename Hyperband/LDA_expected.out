@@ -1,0 +1,21 @@
+loading GLOVE pretrained model ......
+GLOVE loaded.
+
+coh_sum = 76.42473955154418
+dif_sum = 36.60592746734619
+center_distance = 9.025174
+scoring: [692.5064950266134, 0.4789800748049335]
+Topic 0
+['man', 'happen', 'life', 'live', 'school', 'many', 'family', 'tell', 'year', 'kid', 'leave', 'sure', 'place', 'friend', 'bad', 'end', 'business', 'find', 'month', 'world']
+Topic 1
+['bag', 'hair', 'always', 'clip', 'lip', 'color', 'read', 'essential', 'type', 'honestly', 'turn', 'cute', 'vitamin', 'important', 'ahead', 'nail', 'vlog', 'crazy', 'face', 'hand']
+Topic 2
+['store', 'open', 'grocery', 'food', 'car', 'mask', 'whole', 'walk', 'close', 'literally', 'crazy', 'eat', 'empty', 'flight', 'buy', 'leave', 'nice', 'wait', 'line', 'place']
+Topic 3
+['vlog', 'new', 'apartment', 'move', 'room', 'do', 'maybe', 'walk', 'morning', 'nice', 'camera', 'set', 'film', 'like', 'live', 'great', 'end', 'big', 'class', 'year']
+Topic 4
+['account', 'pink', 'ginger', 'rate', 'wouldn', 'worry', 'paper', 'eat', 'fall', 'zoom', 'roll', 'money', 'front', 'complete', 'stretch', 'vibe', 'result', 'wall', 'surprise', 'hair']
+Topic 5
+['eat', 'top', 'size', 'wear', 'cute', 'color', 'hair', 'nice', 'clean', 'add', 'literally', 'quarantine', 'super', 'buy', 'do', 'one', 'always', 'coffee', 'new', 'like']
+Topic 6
+['morning', 'eat', 'face', 'book', 'clean', 'night', 'hair', 'read', 'walk', 'hour', 'call', 'sleep', 'wake', 'tell', 'do', 'minute', 'shower', 'house', 'sure', 'nice']
