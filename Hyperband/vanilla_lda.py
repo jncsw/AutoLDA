@@ -29,16 +29,16 @@ from lda_metric import embedding_distance
 np.set_printoptions(threshold= sys.maxsize)
 np.random.seed(5)
 
-load_model = False
-model_name = 'saved_models_for_testing/LDA_v0.pkl'
+load_model = True
+model_name = '../saved_models_for_testing/LDA_v0.pkl'
 save_to_model = False
 save_model_name = 'saved_models_for_testing/LDA_expected.pkl'
 
 # select from 'coherence', 'perplexity', 'embedding'
 # the perplexity takes the negative so that it can be maximized
-score_type = 'perplexity'
+score_type = 'embedding'
 # set the embedding model from ["BERT", "GLOVE", "W2V", "ELMo"] if use embedding
-embedding_model = 'GLOVE'
+embedding_model = 'ELMo'
 
 
 
@@ -140,29 +140,19 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 		# dtm = tmp.toarray()
 		dtm = tmp
 
-		score.append(metric_coherence_gensim(measure='u_mass', topic_word_distrib=topic_word_distrib, 
-				vocab=vocab, dtm=dtm, return_mean=True))
+		# score.append(metric_coherence_gensim(measure='u_mass', topic_word_distrib=topic_word_distrib, 
+		# 		vocab=vocab, dtm=dtm, return_mean=True))
 
-		# score.append(metric_coherence_gensim(measure='c_v', topic_word_distrib=topic_word_distrib, 
-		# 		vocab=vocab, dtm=dtm, return_mean=True, texts=train_data_tmp))
-
-		# score.append(metric_coherence_gensim(measure='c_uci', topic_word_distrib=topic_word_distrib, 
-		# 		vocab=vocab, dtm=dtm, return_mean=True, texts=train_data_tmp))
-
-		# score.append(metric_coherence_gensim(measure='c_npmi', topic_word_distrib=topic_word_distrib, 
-		# 		vocab=vocab, dtm=dtm, return_mean=True, texts=train_data_tmp))
 
 		topic_keywords = show_topics(self.vectorizer, self.lda_model, verbose=False, n_words=10)
 		keywords = []
 		for i in range(0, len(topic_keywords)):
 			keywords.append(list(topic_keywords[i]))
-		score.append(embedding_distance(keywords, "GLOVE"))
-		score.append(embedding_distance(keywords, "BERT"))
-		# exit()
-		score.append(embedding_distance(keywords, "W2V"))
-		# exit()
-		# score.append(embedding_distance(keywords, "ELMo"))
-		# exit()
+		# score.append(embedding_distance(keywords, "GLOVE"))
+		# score.append(embedding_distance(keywords, "BERT"))
+		# score.append(embedding_distance(keywords, "W2V"))
+
+		score.append(embedding_distance(keywords, "ELMo"))
 		print('scoring:', score)
 		return score
 
