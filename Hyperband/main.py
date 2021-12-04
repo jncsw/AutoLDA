@@ -86,6 +86,8 @@ with open('score_vs_time.csv','w') as f_score:
 
 #-------------------------------------------------- hyperband for LDA
 
+# $ python main.py results_hb_W2V.pkl W2V
+
 try:
     output_file = sys.argv[1]
     if not output_file.endswith( '.pkl' ):
@@ -113,7 +115,7 @@ with open(output_file, 'wb') as f:
 # show the best 10 configs
 print("\n---------------- {} total, best 10 are:\n".format(len(results)))
 
-for r in sorted(results, key = lambda x: x['score'], reverse=False)[:10]: # from low to high
+for r in sorted(results, key = lambda x: x['score'], reverse=True)[:10]: # from low to high
     print( "lda_score: {:.4} | {} seconds | {:.1f} n_iter | run {} ".format( 
                  r['score'], r['config_seconds'], r['iterations'], r['counter']))
     

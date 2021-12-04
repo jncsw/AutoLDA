@@ -27,11 +27,6 @@ def run_config(n_iterations, params, data):
 
 if __name__ == '__main__':
 
-    with open( 'best_10_configs.pkl', 'rb' ) as f:
-        best_10 = pickle.load( f )
-
-    # with open( 'worst_10_configs.pkl', 'rb' ) as f:
-    #     worst_10 = pickle.load( f )
 
     print('loading full data')
     with open('data.pkl','rb') as pk:
@@ -41,6 +36,13 @@ if __name__ == '__main__':
     emb_model = sys.argv[2]
     print('num =',num)
     print('emb_model =', emb_model)
+
+    with open( 'best_10_configs_{}.pkl'.format(emb_model), 'rb' ) as f:
+        best_10 = pickle.load( f )
+
+    # with open( 'worst_10_configs.pkl', 'rb' ) as f:
+    #     worst_10 = pickle.load( f )
+
 
     print('\n'+'==='*10+' best {}:'.format(num))
     good_res = []
