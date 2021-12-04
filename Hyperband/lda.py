@@ -13,7 +13,7 @@ import pickle
 
 # define search space
 space = {
-         'max_df': hp.uniform('maxdf', 0.7, 1),
+         'max_df': hp.uniform('maxdf', 0.6, 1),
          'min_df': hp.uniform('mindf', 0, 0.2),
          # 'max_df': hp.choice('maxdf', (0.6, 0.6)),
          # 'min_df': hp.choice('mindf', (0.05, 0.05)),

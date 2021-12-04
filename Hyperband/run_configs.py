@@ -64,7 +64,7 @@ if __name__ == '__main__':
     #     bad_res.append(res)
 
     print ("saving best res ......")
-    with open('best_{}_configs_res.pkl'.format(num), 'wb') as f:
+    with open('best_{}_configs_res_{}.pkl'.format(num, emb_model), 'wb') as f:
         pickle.dump(good_res, f)
 
     # print ("saving worst res ......")
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     #     pickle.dump(bad_res, f)
 
     # save the topic_distri in good_res
-    with open('doc_topic_distr.csv','w') as f:
+    with open('doc_topic_distr_{}.csv'.format(emb_model),'w') as f:
         # f.write('doc_id,topic1,topic2,topic3,topic4,topic5\n')
         idx = 0
         for r in good_res[0]['doc_topic_distr']: # take the first, assume the best
