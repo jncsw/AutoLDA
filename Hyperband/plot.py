@@ -9,6 +9,9 @@ Created on Sat Dec  4 00:35:52 2021
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
+# W2V
+
 # data = pd.read_csv('score_vs_time_W2V.csv')
 # data = pd.read_csv('score_vs_time_GLOVE.csv')
 data = pd.read_csv('score_vs_time_BERT.csv')
