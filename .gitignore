@@ -14,3 +14,6 @@ glove_pretrained_840b_300d.pkl
 
 # other datasets
 abcnews-date-text.csv
+
+# reference paper and source code
+Hyperband_references/
