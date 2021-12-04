@@ -9,16 +9,18 @@ Created on Sat Dec  4 00:35:52 2021
 import matplotlib.pyplot as plt
 import pandas as pd
 
-data = pd.read_csv('score_vs_time_W2V.csv')
+# data = pd.read_csv('score_vs_time_W2V.csv')
 # data = pd.read_csv('score_vs_time_GLOVE.csv')
+data = pd.read_csv('score_vs_time_BERT.csv')
 
 x=data['Time(s)']
 y=data['score']
 
 fig, ax = plt.subplots(figsize=(6,6))
 
-ax.plot(x, y, label='HB-W2V', marker='o', color='red')
+# ax.plot(x, y, label='HB-W2V', marker='o', color='red')
 # ax.plot(x, y, label='HB-GLOVE', marker='o', color='red')
+ax.plot(x, y, label='HB-BERT', marker='o', color='red')
 
 plt.legend()
 plt.xlim([0,1400])

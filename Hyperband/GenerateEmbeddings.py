@@ -1,6 +1,6 @@
-from Embeddings.BERT import genEmbeddings_BERT
-# from Embeddings.ELMo import genEmbeddings_ELMo
-from Embeddings.Word2Vec import genEmbeddings_W2V
+# from Embeddings.BERT import genEmbeddings_BERT
+from Embeddings.ELMo import genEmbeddings_ELMo
+# from Embeddings.Word2Vec import genEmbeddings_W2V
 # from Embeddings.GLOVE import genEmbeddings_GLOVE
 # from tqdm import tqdm
 import numpy as np
