@@ -3,9 +3,10 @@
 This repo implements the Hyperband with LDA, aiming to build a AutoLDA tool to find the best hyperparameters for LDA.
 
 Different implementation schemes of Hyperband with LDA was implemented in different branches.
-	* main: Hyperband with data (# of documents) as resources. This scheme allocates more training data to most promising configs. Tests shows this does not work well.
-	* hyperband_iter: Hyperband with # of iterations as resouces, perplexity as metric to evaluate the goodness of LDA. This schemes splits data into training data and test data. The perplexity of test data is used as evaluation metric to filter the good configs.
-	* iter_w2v: Hyperband with # of iterations as resources. This scheme uses full data to train the LDA with given iterations. Different embedding methods were used to calculate the embedding score.
+
+1. main: Hyperband with data (# of documents) as resources. This scheme allocates more training data to most promising configs. Tests shows this does not work well.
+2. hyperband_iter: Hyperband with # of iterations as resouces, perplexity as metric to evaluate the goodness of LDA. This schemes splits data into training data and test data. The perplexity of test data is used as evaluation metric to filter the good configs.
+3. iter_w2v: Hyperband with # of iterations as resources. This scheme uses full data to train the LDA with given iterations. Different embedding methods were used to calculate the embedding score.
 
 Switch to different branches to try different implementation schemes.
 
