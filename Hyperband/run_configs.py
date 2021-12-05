@@ -76,10 +76,9 @@ if __name__ == '__main__':
     # save the topic_distri in good_res
     with open('doc_topic_distr_{}.csv'.format(emb_model),'w') as f:
         # f.write('doc_id,topic1,topic2,topic3,topic4,topic5\n')
-        idx = 0
-        for r in good_res[0]['doc_topic_distr']: # take the first, assume the best
-        
-            # f.write('{},{},{},{},{},{}\n'.format(idx, r[0],r[1],r[2],r[3],r[4]))
-            f.write('{}\t{}\t{}\t{}\t{}\n'.format(r[0],r[1],r[2],r[3],r[4]))
-            idx += 1
+        d_t = good_res[0]['doc_topic_distr'] # take the first, assume the best 
+        for r in range(d_t.shape[0]):
+            for c in range(d_t.shape[1]):
+                f.write('{}\t'.format(d_t[r,c]))
+            f.write('\n')
 
