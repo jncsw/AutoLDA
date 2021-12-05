@@ -1,3 +1,6 @@
+#Ignore Hyperband_references
+Hyperband_references/
+
 # Ignore Mac system files
 .DS_store
 
