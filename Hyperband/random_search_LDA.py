@@ -19,7 +19,7 @@ from scipy.stats import randint as sp_randint
 from sklearn.model_selection import RandomizedSearchCV
 import time
 import matplotlib.pyplot as plt
-from tmtoolkit.topicmod.evaluate import metric_coherence_gensim
+# from tmtoolkit.topicmod.evaluate import metric_coherence_gensim
 
 import sys
 # sys.path.append('/home/kexin/Desktop/AutoLDA/Hyperband')
@@ -32,17 +32,21 @@ np.random.seed(5)
 load_model = False
 model_name = 'best_LDA.pkl'
 save_to_model = True
-save_model_name = '../RandomSearch/random_w2v.pkl'
+# =============
+save_model_name = '../RandomSearch/random_elmo.pkl'
 
-csv_name = '../RandomSearch/random_w2v.csv'
+csv_name = '../RandomSearch/random_elmo.csv'
 
+# set the embedding model from ["BERT", "GLOVE", "W2V", "ELMo"] if use embedding
+embedding_model = 'ELMo'
+
+#============
 # select from 'coherence', 'perplexity', 'embedding'
 # the perplexity takes the negative so that it can be maximized
 score_type = 'embedding'
-# set the embedding model from ["BERT", "GLOVE", "W2V", "ELMo"] if use embedding
-embedding_model = 'W2V'
 
-param_dist = {"max_df": uniform(loc=0.6, scale=0.4),					
+
+param_dist = {"max_df": uniform(loc=0.6, scale=0.2),					
 			  "min_df": uniform(loc=0.02, scale=0.18),		 
 			  "topic_number": sp_randint(5, 15),	
 			  "doc_topic_prior": uniform(loc=0.01, scale=1.99),
@@ -55,7 +59,7 @@ seattle_long = ['_x4YRd98rp8','-J3jTqY08Ec','-n4_aEmpInA','-OfSZdqtFnk','-ruy-w0
 chicago_long = ['_-pc4Jp_ghw','_amSXW6ER2s','-MBex64U-uA','-ruy-w0bxvA','0lB3NT9u8E8','0S1BScOkeQM','1DYTc-Utc34','1PrA4WAP9LA','2boYI6YVkCs','2vTat1k_i9I','3DjH8dOHigQ','3jyBO4V555w','3ldlJwuvo-4','5buv41nOf0k','5js-W-dF_PI','5pkHazhJz-s','6KtfQQp-EHM','6O4EkKGQPjg','7B7CL-nAhag','7EGFD50qFss','7EyK3EmBQP8','7kYf4fVCWVs','7oDSusXoeko','7YkS7NDSA4I','8fu5E1eGRVY','35x83Ilepgw','57y8VR4Im54','72HGCMl-ZBM','ACfVSGtgIaQ','agbchpkOslA','Agclcc3Z1wg','AiEATwp6J7o','aqKLErKfCIU','aZ9ml9_ZUQ8','b0St7tzRjls','b46-jgnXYKg','bbIqOtveUVM','BBm3P37Atgw','bIvWae2GDvY','BLOuG2gjosQ','BOW7YjZ7vAk','bzIAincGQko','C9G0HmW4ZFk','cjEaWvyIEA4','CU8VP6eIzFI','Dal6DC4oa_c','DhuPSMOXnI0','ef9srT0dSog','eLcwWT1UlWo','eMuFYlOK8qE','eofJ_i-J9ss','f0rl-wKFy-E','F2kZMCFZKB8','f59k6WIHnFU','Ffpx2xEDfJE','fFu9usQXULA','FZ7hT8HjLM0','GZHqQW_1Ixk','HLkYaoj8FlY','HoeIYHSJdsE','I7DXbqHI_Wo','IK0CMsio3Pk','iKxbb-Lwziw','iorJREkOEKI','J5cgxbwCll8','jBNfqcawpHA','jitaT7KmRgw','JRH5tDwuMGc','jWwH0dhDGI8','KGU3v5k6j30','kLzANpNv9W0','KuZ-ZU8o8VM','L1O4Tqtl-Ts','lHjdZiSXH6U','lixBnuPY1kU','LK-ijBpGaMY','lS_lF8qXP8A','m_1tglpJa3U','M9aYpQn107o','mA4mDgw9gZs','MFY-yVIZ04s','mFYWR8e-UTo','MGOxRGD8jVI','MsFGOJbcTmM','mzoXxaWTh9g','N5N4bHHsRKY','n7A1sSY9LQs','nFxOWWj3hpM','ng-kukZkUJ0','nHtj_mgLmEU','NsPwhY_E5pY','nUaySHRNkro','OaNTgcltRxs','oGhqerpHJ8o','Ol_-UeJqYvg','orMqgbMpOx0','oRPoMnSuZy0','p8izkBjdVoY','PSJTp8Oxygs','pSUXldFHq00','pTp2HhmoVok','pw9PaCOn13w','pwzUP7LQxW4','q8BI1I1ZFLM','Qs5dLzUh5Tg','qWZ77apWw-A','QyCJFgSTcb8','RHFqxFgy3_M','rS-xnpSlPN8','sGOaJfZ7ON0','sJ3EX6FszGE','sms_f_PYumI','snHxWQdNPow','SNWrQQSwkZ8','t1b9KwxbgJw','T8aJ5w_y6Wg','tfHqbXkJlRM','tHN4LYq_ap4','THsmZ_kXU4s','TX_a8qmqMPY','u9zGFpGeJY0','u11hu5YeiSI','U99cl9oZ9OM','Ua5yE9BuIgA','uGlm4lVoDqo','UkWYNbstUxM','UUGdULch9J8','uWOEkMaf6C0','uZaaquVFX3o','uzJbKE1ejiw','V2XnRr1RwAw','V7q_sqL1Bio','v8bmJbsgUXo','v19JaO5RPVw','VCgiuweaqS0','VfP4kzjEKoE','VPkHGd6K2pQ','VWok20BmvZc','W2NGM1m7Csg','Wg6Gwrr6bnI','wpNa8R93FJs','ww6Hv-XlkAE','wZfMDlW99Us','Xd9hGuHQi7I','XH9GtAewl6s','XNd_CpZX1xc','y-79SBEY9vA','Y9v8wmJK5lM','yANb4fFskQU','YIzu8LzuZSY','YL46jPPx84k','YrRblZnnP9c','Yz5ZizKgIKw','z7b8R9lgq8g','zNd6OOCqwbs','ZUbzSd835CA','ZUFqN8rPpD8']
 all_videos_unique_long = list(set(ny_long+seattle_long+chicago_long))
 
-filenames = seattle_long
+filenames = all_videos_unique_long
 
 subtitle_dic = {}
 
@@ -116,7 +120,7 @@ score_all = []; time_all = []
 
 class LDA_classifier(BaseEstimator, ClassifierMixin):
 
-	def __init__(self, max_df, min_df, topic_number, doc_topic_prior, topic_word_prior, score_type, embedding_model):
+	def __init__(self, max_df, min_df, topic_number, doc_topic_prior, topic_word_prior, max_iter, score_type, embedding_model):
 	# def __init__(self):
 		self.max_df = max_df
 		self.min_df = min_df
@@ -125,14 +129,18 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 		self.topic_word_prior = topic_word_prior
 		self.score_type = score_type
 		self.embedding_model = embedding_model
+		self.max_iter = max_iter
+		# self.ct = 0
 		
 	def fit(self, train_data):
-		print('fitting:', self.max_df, self.min_df, self.topic_number, self.doc_topic_prior, self.topic_word_prior)
+		print('\nfitting:', self.max_df, self.min_df, self.topic_number, self.doc_topic_prior, self.topic_word_prior)
 		self.vectorizer = CountVectorizer(max_df=self.max_df, min_df=self.min_df)
 		self.lda_model = LatentDirichletAllocation(n_components=self.topic_number, doc_topic_prior=self.doc_topic_prior, 
-			topic_word_prior = self.topic_word_prior, learning_method='online', random_state=100)
+			topic_word_prior = self.topic_word_prior, max_iter = self.max_iter, learning_method='online', random_state=100)
 		data_vectorized = self.vectorizer.fit_transform(train_data)
 		self.lda_model.fit(data_vectorized)
+		# self.ct += 1
+		# print('ct =', self.ct)
 
 	def predict(self, texts):
 		text_vectorized = self.vectorizer.transform(texts)
@@ -159,7 +167,7 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 			for i in range(0, len(topic_keywords)):
 				keywords.append(list(topic_keywords[i]))
 			score = embedding_distance(keywords, self.embedding_model)
-			# print('scoring:', score)
+			print('scoring:', score)
 			time_all.append(time.time() - time_all[0])
 			score_all.append(max([score]+score_all))
 		return score
@@ -170,9 +178,9 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 
 if (not load_model):
 	cv = [(slice(None), slice(None))]
-	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, doc_topic_prior=1, topic_word_prior=1, score_type=score_type, embedding_model=embedding_model)
+	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, doc_topic_prior=1, topic_word_prior=1, max_iter=81, score_type=score_type, embedding_model=embedding_model)
 	random_search = RandomizedSearchCV(lda, param_distributions=param_dist,
-									   n_iter=1200, cv=cv, random_state=100, n_jobs=1)
+									   n_iter=60, cv=cv, random_state=100, n_jobs=1)
 
 	time_all.append(time.time())
 	random_search.fit(train_data)
