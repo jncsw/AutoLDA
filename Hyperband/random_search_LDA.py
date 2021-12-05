@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from tmtoolkit.topicmod.evaluate import metric_coherence_gensim
 
 import sys
-sys.path.append('/home/kexin/Desktop/AutoLDA/Hyperband')
+# sys.path.append('/home/kexin/Desktop/AutoLDA/Hyperband')
 from lda_metric import embedding_distance
 
 
@@ -31,22 +31,22 @@ np.random.seed(5)
 
 load_model = False
 model_name = 'best_LDA.pkl'
-save_to_model = False
-save_model_name = 'best_LDA.pkl'
+save_to_model = True
+save_model_name = '../RandomSearch/random_w2v.pkl'
+
+csv_name = '../RandomSearch/random_w2v.csv'
 
 # select from 'coherence', 'perplexity', 'embedding'
 # the perplexity takes the negative so that it can be maximized
 score_type = 'embedding'
 # set the embedding model from ["BERT", "GLOVE", "W2V", "ELMo"] if use embedding
-embedding_model = 'GLOVE'
+embedding_model = 'W2V'
 
-param_dist = {"max_df": uniform(loc=0.7, scale=1),					
-			  "min_df": uniform(loc=0.1, scale=0.2),		 
-			  "topic_number": sp_randint(5, 20),	
-			  "learning_decay": uniform(loc=0.51, scale=1),
-			  "learning_offset": sp_randint(1, 21),
-			  "batch_size":[16, 32, 64, 128, 256],
-			  "max_iter":[100, 200]
+param_dist = {"max_df": uniform(loc=0.6, scale=0.4),					
+			  "min_df": uniform(loc=0.02, scale=0.18),		 
+			  "topic_number": sp_randint(5, 15),	
+			  "doc_topic_prior": uniform(loc=0.01, scale=1.99),
+			  "topic_word_prior": uniform(loc=0.01, scale=1.99)
 			  }
 
 
@@ -116,24 +116,21 @@ score_all = []; time_all = []
 
 class LDA_classifier(BaseEstimator, ClassifierMixin):
 
-	def __init__(self, max_df, min_df, topic_number, learning_decay, learning_offset, batch_size, max_iter, score_type):
+	def __init__(self, max_df, min_df, topic_number, doc_topic_prior, topic_word_prior, score_type, embedding_model):
 	# def __init__(self):
 		self.max_df = max_df
 		self.min_df = min_df
 		self.topic_number = topic_number
-		self.learning_decay = learning_decay
-		self.learning_offset = learning_offset
-		self.batch_size = batch_size
-		self.max_iter = max_iter
+		self.doc_topic_prior = doc_topic_prior
+		self.topic_word_prior = topic_word_prior
 		self.score_type = score_type
 		self.embedding_model = embedding_model
 		
 	def fit(self, train_data):
-		print('fitting:', self.max_df, self.min_df, self.topic_number, self.learning_decay, self.learning_offset, self.batch_size, self.max_iter)
+		print('fitting:', self.max_df, self.min_df, self.topic_number, self.doc_topic_prior, self.topic_word_prior)
 		self.vectorizer = CountVectorizer(max_df=self.max_df, min_df=self.min_df)
-		self.lda_model = LatentDirichletAllocation(n_components=self.topic_number, learning_decay = self.learning_decay,
-                                                	learning_offset = self.learning_offset, batch_size = self.batch_size,           
-													learning_method='online', random_state=100, max_iter=self.max_iter)
+		self.lda_model = LatentDirichletAllocation(n_components=self.topic_number, doc_topic_prior=self.doc_topic_prior, 
+			topic_word_prior = self.topic_word_prior, learning_method='online', random_state=100)
 		data_vectorized = self.vectorizer.fit_transform(train_data)
 		self.lda_model.fit(data_vectorized)
 
@@ -144,22 +141,27 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 	def score(self, train_data):
 		if (self.score_type == 'perplexity'):
 			tmp = self.vectorizer.transform(train_data)
-			score = -self.lda_model.perplexity(tmp)
-			print('scoring:', score)
+			score = self.lda_model.perplexity(tmp)
+			# print('scoring:', score)
 			# global score_all, time_all
 			time_all.append(time.time() - time_all[0])
-			score_all.append(max([score]+score_all))
+			score_all.append(min([score]+score_all))
+			score = -score
 		elif (self.score_type == 'coherence'):
 			score = metric_coherence_gensim(measure='u_mass', topic_word_distrib=self.lda_model.components_, 
 				vocab=np.array(self.vectorizer.get_feature_names()), dtm=self.vectorizer.transform(train_data), return_mean=True)
-			print(score)
+			# print(score)
+			time_all.append(time.time() - time_all[0])
+			score_all.append(max([score]+score_all))
 		elif (self.score_type == 'embedding'):
 			topic_keywords = show_topics(self.vectorizer, self.lda_model, verbose=False, n_words=10)
 			keywords = []
 			for i in range(0, len(topic_keywords)):
 				keywords.append(list(topic_keywords[i]))
 			score = embedding_distance(keywords, self.embedding_model)
-			print('scoring:', score)
+			# print('scoring:', score)
+			time_all.append(time.time() - time_all[0])
+			score_all.append(max([score]+score_all))
 		return score
 
 	def get_model(self):
@@ -168,29 +170,28 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
 
 if (not load_model):
 	cv = [(slice(None), slice(None))]
-	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, learning_decay=0.1, learning_offset=0.1, batch_size=64, max_iter=100, score_type=score_type, embedding_model=embedding_model)
+	lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, doc_topic_prior=1, topic_word_prior=1, score_type=score_type, embedding_model=embedding_model)
 	random_search = RandomizedSearchCV(lda, param_distributions=param_dist,
-									   n_iter=2, cv=cv, random_state=100, n_jobs=1)
+									   n_iter=1200, cv=cv, random_state=100, n_jobs=1)
 
 	time_all.append(time.time())
 	random_search.fit(train_data)
 	print(random_search.best_params_)
 
 	time_all = time_all[1:]
-	plt.plot(time_all, score_all)
-	plt.xlabel('time')
-	plt.ylabel('score')
-	# plt.show()
-	# best_LDA.get_model()
-	# best_LDA.score(train_data)
+	time_output = list(zip(time_all, score_all))
+	file = open(csv_name, 'w', newline ='')
+	with file:    
+	    write = csv.writer(file)
+	    write.writerows(time_output)
 
 	if save_to_model:
 		best_LDA = random_search.best_estimator_
-		with open('best_LDA.pkl', 'wb') as f:
+		with open(save_model_name, 'wb') as f:
 			pickle.dump(best_LDA, f)
 
 else:
-	with open('best_LDA.pkl', 'rb') as f:
+	with open(model_name, 'rb') as f:
 		best_LDA = pickle.load(f)
 	best_LDA.score(train_data)
 
