@@ -29,9 +29,10 @@ from lda_metric import embedding_distance
 np.set_printoptions(threshold= sys.maxsize)
 np.random.seed(5)
 
-load_model = True
+load_model = False
 model_name = '../RandomSearch/random_w2v.pkl'
 save_to_model = True
+run_best_config = True
 # =============
 save_model_name = '../RandomSearch/random_w2v.pkl'
 
@@ -179,45 +180,61 @@ class LDA_classifier(BaseEstimator, ClassifierMixin):
         # print('the final model:', self.max_df, self.min_df, self.topic_number)
         return (self.vectorizer, self.lda_model)
 
-if (not load_model):
-    cv = [(slice(None), slice(None))]
-    lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, doc_topic_prior=1, topic_word_prior=1, max_iter=81, score_type=score_type, embedding_model=embedding_model)
-    random_search = RandomizedSearchCV(lda, param_distributions=param_dist,
-                                       n_iter=60, cv=cv, random_state=100, n_jobs=1)
+if not run_best_config:
 
-    time_all.append(time.time())
-    random_search.fit(train_data)
-    print(random_search.best_params_)
+    if (not load_model):
+        cv = [(slice(None), slice(None))]
+        lda = LDA_classifier(max_df=0.1, min_df=0.05, topic_number=5, doc_topic_prior=1, topic_word_prior=1, max_iter=81, score_type=score_type, embedding_model=embedding_model)
+        random_search = RandomizedSearchCV(lda, param_distributions=param_dist,
+                                           n_iter=60, cv=cv, random_state=100, n_jobs=1)
 
-    time_all = time_all[1:]
-    time_output = list(zip(time_all, score_all))
-    file = open(csv_name, 'w', newline ='')
-    with file:    
-        write = csv.writer(file)
-        write.writerows(time_output)
+        time_all.append(time.time())
+        random_search.fit(train_data)
+        print(random_search.best_params_)
 
-    if save_to_model:
-        best_LDA = random_search.best_estimator_
-        with open(save_model_name, 'wb') as f:
-            pickle.dump(best_LDA, f)
+        time_all = time_all[1:]
+        time_output = list(zip(time_all, score_all))
+        file = open(csv_name, 'w', newline ='')
+        with file:    
+            write = csv.writer(file)
+            write.writerows(time_output)
+
+        if save_to_model:
+            best_LDA = random_search.best_estimator_
+            with open(save_model_name, 'wb') as f:
+                pickle.dump(best_LDA, f)
+
+    else:
+        print('Load best model ......')
+        with open(model_name, 'rb') as f:
+            best_LDA = pickle.load(f)
+        
+        # d_t = best_LDA.fit(train_data)
+        # print(d_t.shape)
+        # # save doc_topic_distr
+        # with open('doc_topic_distr_{}.csv'.format(best_LDA.embedding_model),'w') as f:
+        #     # f.write('doc_id,topic1,topic2,topic3,topic4,topic5\n')
+        #     for r in range(d_t.shape[0]):
+        #         for c in range(d_t.shape[1]):
+        #             f.write('{}\t'.format(d_t[r,c]))
+        #         f.write('\n')
+           
+        best_LDA.score(train_data)
 
 else:
-    print('Load best model ......')
-    with open(model_name, 'rb') as f:
-        best_LDA = pickle.load(f)
-    
-    d_t = best_LDA.fit(train_data)
+
+    lda = LDA_classifier(max_df=0.6373, min_df=0.0578, topic_number=7, doc_topic_prior=0.3219, topic_word_prior=0.2820, max_iter=81, score_type=score_type, embedding_model=embedding_model)
+    d_t = lda.fit(train_data)
     print(d_t.shape)
     # save doc_topic_distr
-    with open('doc_topic_distr_{}.csv'.format(best_LDA.embedding_model),'w') as f:
-        # f.write('doc_id,topic1,topic2,topic3,topic4,topic5\n')
+    with open('doc_topic_distr_{}.csv'.format(lda.embedding_model),'w') as f:
         for r in range(d_t.shape[0]):
             for c in range(d_t.shape[1]):
                 f.write('{}\t'.format(d_t[r,c]))
             f.write('\n')
-       
 
-    best_LDA.score(train_data)
+    time_all.append(time.time())
+    lda.score(train_data)
 
  
 
